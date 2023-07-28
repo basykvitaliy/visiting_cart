@@ -5,14 +5,15 @@ import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/screens/favorite/favorite_screen.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
-import 'package:visiting_card/screens/menu/menu_controller.dart';
+import 'package:visiting_card/screens/menu/menu_main_controller.dart';
+import 'package:visiting_card/screens/profile/profile_screen.dart';
 import 'package:visiting_card/screens/settings/settings_screen.dart';
 
-class MenuScreen extends GetView<MenuController> {
+class MenuScreen extends GetView<MenuMainController> {
   MenuScreen({Key? key}) : super(key: key);
 
   @override
-  final MenuController controller = Get.put(MenuController());
+  final MenuMainController controller = Get.put(MenuMainController());
   var scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -60,7 +61,7 @@ final iconList = <IconData>[
   Icons.home,
   Icons.favorite,
   Icons.settings,
-  Icons.settings,
+  Icons.person,
 ];
 
 List<Widget> _buildScreens() {
@@ -68,6 +69,6 @@ List<Widget> _buildScreens() {
     HomeScreen(),
     FavoriteScreen(),
     SettingsScreen(),
-    SettingsScreen(),
+    ProfileScreen(),
   ];
 }

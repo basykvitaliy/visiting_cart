@@ -64,6 +64,8 @@ dependencies:
   loading_animation_widget: ^1.2.0+4
   animated_bottom_navigation_bar: ^1.2.0
   circular_profile_avatar: ^2.0.5
+  sqflite: ^2.2.8+1
+  qr_flutter: ^4.0.0
 
 dev_dependencies:
   flutter_test:

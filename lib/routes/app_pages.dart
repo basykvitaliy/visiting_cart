@@ -7,6 +7,9 @@ import 'package:visiting_card/screens/home/home_screen.dart';
 import 'package:visiting_card/screens/scan/info_user_screen.dart';
 import 'package:visiting_card/screens/scan/scan_binding.dart';
 import 'package:visiting_card/screens/scan/scan_screen.dart';
+import 'package:visiting_card/screens/settings/settings_binding.dart';
+import 'package:visiting_card/screens/settings/settings_controller.dart';
+import 'package:visiting_card/screens/settings/settings_screen.dart';
 
 class AppPages {
   static final pages = [
@@ -28,6 +31,11 @@ class AppPages {
     GetPage(
       name: Routes.infoScreen,
       page: () => InfoUserScreen(),
+    ),
+    GetPage(
+      name: Routes.settingsScreen,
+      page: () => SettingsScreen(),
+      binding: SettingsBinding(),
     ),
   ];
 }

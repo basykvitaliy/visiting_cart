@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
 
-class MenuController extends GetxController with GetTickerProviderStateMixin {
-  static MenuController get to => Get.find();
+class MenuMainController extends GetxController with GetTickerProviderStateMixin {
+  static MenuMainController get to => Get.find();
   RxInt selectedIndex = 0.obs;
 
   Future<bool> onWillPop() async {

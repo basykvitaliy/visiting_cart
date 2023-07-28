@@ -16,9 +16,7 @@ class InfoUserScreen extends GetView<ScanController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          toolbarHeight: 10,
+          backgroundColor: AppTheme().colors!.secondColors,
           automaticallyImplyLeading: false,
         ),
         backgroundColor: AppColors.mainColor,
