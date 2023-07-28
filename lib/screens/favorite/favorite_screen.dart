@@ -14,7 +14,7 @@ class FavoriteScreen extends GetView<FavoriteController> {
           title: Text("Favorite"),
           automaticallyImplyLeading: false,
         ),
-        backgroundColor: AppColors.bgLayout,
+        backgroundColor: AppTheme().colors!.mainBackground,
         body: Container(),
     );
   }

@@ -35,3 +35,13 @@ enum AuthStatus {
 class LayoutConstants {
   static const snackBarRadius = 10.0;
 }
+
+class Keys {
+  static const isDarkTheme = "isDarkTheme";
+  static const deviceId = "deviceId";
+  static const token = "token";
+  static const color = "color";
+  static const cardKey = "cardKey";
+  static const barcodeSvg = "barcodeSvg";
+  static const qrCodeSvg = "qrCodeSvg";
+}

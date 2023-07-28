@@ -12,7 +12,26 @@ class Messages extends Translations {
           "size": "Size",
           "cancel": "Cancel",
           "signIn": "Sign In",
-
+        },
+        'uk_UA': {
+          "back": "Назад",
+          "start": "Початок",
+          "pause": "Пауза",
+          "scanTheProduct": "Сканувати продукт",
+          "color": "Колір",
+          "size": "Розмір",
+          "cancel": "Скасувати",
+          "signIn": "Увійти",
+        },
+        'ru_RU': {
+          "back": "Назад",
+          "start": "Начать",
+          "pause": "Пауза",
+          "scanTheProduct": "Сканировать продукт",
+          "color": "Цвет",
+          "size": "Размер",
+          "cancel": "Отмена",
+          "signIn": "Войти",
         },
       };
 }

@@ -1,82 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_disposable.dart';
+
+class AppTheme extends GetxService {
+  static final AppTheme _instance = AppTheme._();
+
+  factory AppTheme() => _instance;
+
+  AppTheme._();
+
+  AppColors? colors;
+  AppStyles? styles;
+  bool isDarkTheme = false;
+
+  bool get isLightTheme => !isDarkTheme;
+
+  ///Colors should be set first!
+  void setTheme({required bool isDark}) {
+    isDarkTheme = isDark;
+    colors = AppColors(isDarkTheme: isDarkTheme);
+    styles = AppStyles(isDarkTheme: isDarkTheme);
+  }
+}
 
 class AppColors {
-  static const Color dark0 = Color(0xFF1d1d1d);
-  static const Color dark1 = Color(0xFF19212e);
-  static const Color dark2 = Color(0xFF1f2534);
-  static const Color dark3 = Color(0xFF262d3d);
-  static const Color dark4 = Color(0xFF2f3748);
-  static const Color charcoalGrey = Color(0xFF36404e);
-  static const Color charcoalGrey2 = Color(0xff404c56);
-  static const Color slate = Color(0xff444e63);
-  static const Color grayishBrown = Color(0xFF515151);
-  static const Color pine = Color(0xff2f4830);
-  static const Color darkSage = Color(0xff446346);
-  static const Color lightSage = Color(0xffd7f2c3);
-  static const Color washedOutGreen = Color(0xffc3ef9e);
-  static const Color coolGray = Color(0xff9ea9b2);
-  static const Color coolGray2 = Color(0xFFb2bdc6);
-  static const Color primaryAccent = Color(0xff6bae33);
-  static const Color primaryAccentLight = Color(0xff7dc144);
-  static const Color secondaryAccent = Color(0xff447ac1);
-  static const Color orange = Color(0xffff7335);
-  static const Color sandyYellow = Color(0xffedcc1f);
-  static const Color darkRed = Color(0xffef1a1a);
-  static const Color blueishWhite = Color(0xfff5f9fc);
-  static const Color white = Color(0xffffffff);
-  static const Color paleGray = Color(0xffdfe5f2);
 
-  static const Color loadingIndicator = Color(0xFFffffff);
-  static const Color brightIcon = Color(0xFFffffff);
-  static const Color darkIcon = Color(0xff2a2828);
-  static const Color secondaryText = Color(0xFF242a30);
-  static const Color error = Color(0xffe21717);
-  static const Color errorLite = Color(0xffeee5e5);
-  static const Color bottomNavBarMainButton = Color(0xFF1d61a5);
-  static const Color sos = Color(0xffff0000);
-  static const Color pttIdle = Color(0xFFff6c00);
-  static const Color pttTransmitting = Color(0xFFff0d0d);
-  static const Color pttReceiving = Color(0xFF7dc144);
-  static const Color overlayBarrier = Color.fromRGBO(0, 0, 0, .6);
-  static const Color alertnessFailed = Color(0xFFff5a04);
-  static const Color shiftSummaryIconColor = Color(0x800D64F5);
-  static const Color selectedItemIconColor = Color(0x80032A6C);
-  static const Color mapMarkerPath = Colors.blue;
-  static const Color qrScannerRect = Color(0xFFffc000);
-  static const Color graphBorder = Color(0xffbfbfbf);
-  static const Color textFieldFill = Color(0xfff1f1f1);
+  static const Color mainColor = Color(0xffd2d2d2);
+  static const Color mainDarkThemeColor = Color(0xff303030);
+  static const Color secondDarkThemeColor = Color(0xff2F5A6A);
+  static const Color secondDarkDisableColor = Color(0xff6783a1);
+  static const Color mainTextColor = Color(0xff2E2727);
+  static const Color secondColor = Color(0xff09862C);
+  static const Color secondDisableColor = Color(0xff76a981);
+  static const Color hintTextColor = Color(0xffadadad);
+  static const Color shadowDarkThemeColor = Color(0xff4f4f4f);
+  static const Color shadowLightDarkThemeColor = Color(0xff777777);
+  static const Color errorColor = Color(0xffb64949);
+  static const Color whiteColor = Color(0xffffffff);
+  static const Color disabledButton = Color(0xff788a73);
 
-  /// New colors for populi
-  static const Color mainColor = Color(0xff029eb0);
-  static const Color secondColor = Color(0xff5f62e5);
-  static const Color disabledBtn = Color(0x77785fe5);
-  static const Color darkGray = Color(0xff5a5c60);
-  static const Color darkGray2 = Color(0xffA2A8A9);
-  static const Color black = Color(0xff333333);
-  static const Color blackText = Color(0xff535353);
-  static const Color gray = Color(0xff828282);
-  static const Color lightGray = Color(0xffbdbdbd);
-  static const Color bgLayout = Color(0xffeef5fb);
-  static const Color bgSuperLightGray = Color(0xffebebeb);
-  static const Color green = Color(0xff488f67);
-  static const Color lightGreen = Color(0xffe1ecf8);
-  static const Color red = Color(0xffF18070);
-  static const Color violet = Color(0xffdd16bf);
-  static const Color workWhite = Color(0xffffffff);
-  static const Color shadowBottomMenu = Color(0xff818fa3);
-  static const Color secondButton = Color(0xffdaafa2);
-  static const Color bgUpNotifiDialog = Color(0xffF6FAFF);
-  static const Color bgDownNotifiDialog = Color(0xffEEF5FB);
+  final Color mainBackground;
+  final Color textColors;
+  final Color textGreenWhiteColors;
+  final Color secondColors;
+  final Color secondColorsDisable;
+  final Color shadowOne;
+  final Color shadowTwo;
+  final Color checkBoxColor;
+
+  AppColors({required bool isDarkTheme})
+      : mainBackground = isDarkTheme ? mainDarkThemeColor : mainColor,
+        secondColors = isDarkTheme ? secondDarkThemeColor : secondColor,
+        secondColorsDisable = isDarkTheme ? secondDarkDisableColor : secondDisableColor,
+        textGreenWhiteColors = isDarkTheme ? whiteColor : secondColor,
+        checkBoxColor = isDarkTheme ? whiteColor : secondColor,
+        shadowOne = isDarkTheme ? shadowDarkThemeColor : whiteColor,
+        shadowTwo = isDarkTheme ? mainTextColor : hintTextColor,
+        textColors = isDarkTheme ? mainColor : mainTextColor;
 }
 
 class AppStyles {
-  static const regularBodyDarkText = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.black);
+
   static const regularBodyDarkText12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black);
   static const regularDarkText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black);
   static const regularDarkTextBold16 = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black);
   static const regularHeading18 = TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black);
-  static const boldHeading = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black);
+  static const boldHeading22 = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black);
   static const boldHeading28 = TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black);
+  static const boldBigHeading30 = TextStyle(fontSize: 30, fontWeight: FontWeight.w500, );
   static const boldBigHeading = TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black);
 
   static const regularBodyGreyText13 = TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Colors.grey);
@@ -86,14 +76,107 @@ class AppStyles {
   static const boldGreyHeading22 = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.grey);
 
   static const regularBodyWhiteText = TextStyle(fontSize: 8, fontWeight: FontWeight.w400, color: Colors.white);
-  static const regularWhiteText = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white);
-  static const regularWhiteHeading = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: Colors.white);
-  static const boldWhiteHeading = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white);
+  static const regularWhiteText14 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white);
+  static const regularWhiteText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white);
+  static const regularWhiteHeading18 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: Colors.white);
+  static const boldWhiteHeading = TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Colors.white);
+  static const boldWhite26 = TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colors.white);
+  static const boldWhite30 = TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: Colors.white);
 
   static const regularBodyMainText = TextStyle(fontSize: 8, fontWeight: FontWeight.w400, color: AppColors.mainColor);
-  static const regularMainText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.mainColor);
-  static const regularMainHeading = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: AppColors.mainColor);
+  static const regularMainText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondColor);
+  static const regularMainHeading = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: AppColors.secondColor);
   static const boldMainHeading22 = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.mainColor);
   static const boldMainHeading24 = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.mainColor);
   static const boldMainHeading28 = TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.mainColor);
+
+  static const regularErrorText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.errorColor);
+
+  final TextStyle textStyle14mainColor;
+  final TextStyle textStyle16mainColor;
+  final TextStyle textStyle14WhiteColor;
+  final TextStyle textStyle16WhiteColor;
+  final TextStyle textStyle20WhiteColor;
+  final TextStyle bold18;
+  final TextStyle bold20;
+  final TextStyle bold22;
+  final TextStyle regular16;
+  final TextStyle bold30;
+  final TextStyle bold30second;
+  final TextStyle hintStyle14;
+  final TextStyle hintStyle16;
+  final TextStyle grayText16;
+  final TextStyle greenWhiteText16;
+
+
+  AppStyles({required bool isDarkTheme}):
+        textStyle14mainColor = headline1BaseStyle14.copyWith(color: isDarkTheme ? AppColors.secondDarkThemeColor : AppColors.secondColor),
+        textStyle16mainColor = headline1BaseStyle16.copyWith(color: isDarkTheme ? AppColors.secondDarkThemeColor : AppColors.secondColor),
+        textStyle14WhiteColor = headline1BaseStyle14.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
+        textStyle16WhiteColor = whiteColor16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
+        textStyle20WhiteColor = whiteColor20.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
+        greenWhiteText16 = whiteColor16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondColor),
+        regular16 = headline1BaseStyle16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
+        bold18 = textBold18.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
+        bold20 = textBold20.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
+        bold22 = textBold22.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
+        bold30 = textBold30.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
+        bold30second = textBold30.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondColor),
+        hintStyle14 = hint14.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.mainTextColor.withOpacity(0.4)),
+        hintStyle16 = hint16.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.mainTextColor.withOpacity(0.4)),
+        grayText16 = hint16.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.shadowLightDarkThemeColor);
+
+
+  static const headline1BaseStyle14 = TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const headline1BaseStyle16 = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
+  );
+  static const whiteColor16 = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const hint16 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const hint14 = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const textBold18 = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const textBold20 = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const textBold22 = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const whiteColor20 = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const textBold30 = TextStyle(
+    fontSize: 30.0,
+    fontWeight: FontWeight.bold,
+  );
+
+
 }
+
+

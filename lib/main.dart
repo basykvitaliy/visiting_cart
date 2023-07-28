@@ -4,10 +4,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/routes/app_pages.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
 import 'package:visiting_card/screens/menu/menu_screen.dart';
 import 'package:visiting_card/translation/Messages.dart';
+
+import 'helpers/app_colors.dart';
+import 'helpers/constants.dart';
 
 void main()async {
 
@@ -18,6 +22,15 @@ void main()async {
   /// Permission for visible image network.
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
+
+  /// Set theme
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var theme = sharedPreferences.getBool(Keys.isDarkTheme);
+  if(theme == null){
+    AppTheme().setTheme(isDark: false);
+  }else{
+    AppTheme().setTheme(isDark: theme);
+  }
 
   runApp(const MyApp());
 }

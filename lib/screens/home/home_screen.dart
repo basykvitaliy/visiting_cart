@@ -15,7 +15,7 @@ class HomeScreen extends GetView<HomeController> {
           title: Text("Home"),
           automaticallyImplyLeading: false,
         ),
-        backgroundColor: AppColors.bgLayout,
+        backgroundColor: AppTheme().colors!.mainBackground,
         body: Container(),
 
     );
