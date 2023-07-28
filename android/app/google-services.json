@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "586896970158",
+    "project_id": "visiting-card-d6484",
+    "storage_bucket": "visiting-card-d6484.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:586896970158:android:13e975d7edd1ef3c68b83f",
+        "android_client_info": {
+          "package_name": "com.visiting.card"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "586896970158-n85r4cgqd9qq9igg5khkhn7k0gh8p7oh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOAL-S3qIihVxwgY0ODmj-lkUdgxdjGcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "586896970158-n85r4cgqd9qq9igg5khkhn7k0gh8p7oh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
