@@ -1,34 +1,31 @@
-import 'dart:math';
-
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
-import 'package:visiting_card/screens/profile/profile_controller.dart';
+import 'package:visiting_card/screens/enter_data_manually/enter_data_controller.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
 
-class EditProfileScreen extends GetView<ProfileController> {
-  EditProfileScreen({Key? key}) : super(key: key);
+class EnterDataScreen extends GetView<EnterDataController> {
+  EnterDataScreen({Key? key}) : super(key: key);
 
   @override
-  var controller = Get.put(ProfileController());
+  final EnterDataController controller = Get.put(EnterDataController());
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController? phone = Get.arguments as TextEditingController?;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            "myAccount".tr.toUpperCase(),
-            style: AppStyles.boldWhiteHeading,
-          ),
-          centerTitle: true,
-          elevation: 0,
-          automaticallyImplyLeading: true,
-          backgroundColor: AppTheme().colors!.mainBackground,
-        ),
-        backgroundColor: AppTheme().colors!.mainBackground,
-        body: SingleChildScrollView(
+      appBar: AppBar(
+        title: Text("addDataManually".tr, style: AppStyles.boldWhiteHeading,),
+        centerTitle: true,
+        automaticallyImplyLeading: true,
+        backgroundColor: AppTheme().colors!.secondColors,
+      ),
+      backgroundColor: AppTheme().colors!.mainBackground,
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.only(bottom: 32, top: 16),
+        child: SingleChildScrollView(
           child: Form(
             key: controller.formKey,
             child: Center(
@@ -37,64 +34,64 @@ class EditProfileScreen extends GetView<ProfileController> {
                 children: [
                   const SizedBox(height: 16),
                   Obx(() => Stack(children: [
-                        CircularProfileAvatar(
-                          '',
-                          borderColor: AppColors.whiteColor,
-                          borderWidth: 1,
-                          elevation: 1,
-                          radius: 80,
-                          backgroundColor: AppColors.hintTextColor,
-                          child: controller.isLoadImage.value ? Image.file(controller.image.value, fit: BoxFit.cover) : const Icon(Icons.person),
-                          onTap: () {
-                            controller.showImageSourceDialog(context);
-                          },
-                        ),
-                        Positioned(
-                            left: 0,
-                            right: 0,
-                            bottom: 12,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: AppColors.whiteColor.withOpacity(0.5),
-                              size: 35,
-                            ))
-                      ])),
+                    CircularProfileAvatar(
+                      '',
+                      borderColor: AppColors.whiteColor,
+                      borderWidth: 1,
+                      elevation: 1,
+                      radius: 80,
+                      backgroundColor: AppColors.hintTextColor,
+                      child: controller.isLoadImage.value ? Image.file(controller.image.value, fit: BoxFit.cover) : const Icon(Icons.person),
+                      onTap: () {
+                        controller.showImageSourceDialog(context);
+                      },
+                    ),
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 12,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: AppColors.whiteColor.withOpacity(0.5),
+                          size: 35,
+                        ))
+                  ])),
                   const SizedBox(height: 16),
                   Column(
                     children: [
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         child: TextFormField(
-                          controller: controller.nameController,
-                          keyboardType: TextInputType.text,
-                          style:AppTheme().styles!.textStyle16WhiteColor,
-                          validator: (value) {
-                            if (!controller.isName(value!)) {
-                              controller.isValidName.value = false;
-                            } else {
-                              controller.isValidName.value = true;
-                            }
-                            return null;
-                          },
-                          onChanged: (v){
-                            if (v.length >= 3) {
-                              controller.isValidName.value = true;
-                            } else {
-                              controller.isValidName.value = false;
-                            }
-                          },
-                          decoration: InputDecoration(
-                              alignLabelWithHint: true,
-                              labelText: "name".tr,
-                              hintText: "name".tr,
-                              hintStyle: AppTheme().styles!.hintStyle16,
-                            errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(
-                                  color: AppColors.errorColor,
-                                  width: 1,
-                                )),
-                              border: const UnderlineInputBorder())
+                            controller: controller.nameController,
+                            keyboardType: TextInputType.text,
+                            style:AppTheme().styles!.textStyle16WhiteColor,
+                            validator: (value) {
+                              if (!controller.isName(value!)) {
+                                controller.isValidName.value = false;
+                              } else {
+                                controller.isValidName.value = true;
+                              }
+                              return null;
+                            },
+                            onChanged: (v){
+                              if (v.length >= 3) {
+                                controller.isValidName.value = true;
+                              } else {
+                                controller.isValidName.value = false;
+                              }
+                            },
+                            decoration: InputDecoration(
+                                alignLabelWithHint: true,
+                                labelText: "name".tr,
+                                hintText: "name".tr,
+                                hintStyle: AppTheme().styles!.hintStyle16,
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                      color: AppColors.errorColor,
+                                      width: 1,
+                                    )),
+                                border: const UnderlineInputBorder())
                         ),
                       ),
                       const SizedBox(height: 8),
@@ -133,7 +130,7 @@ class EditProfileScreen extends GetView<ProfileController> {
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),
                         child: TextFormField(
-                          controller: phone?.text == null ? controller.phoneController : phone,
+                          controller: controller.phoneController,
                           keyboardType: TextInputType.phone,
                           style:AppTheme().styles!.textStyle16WhiteColor,
                           validator: (value) {
@@ -187,15 +184,15 @@ class EditProfileScreen extends GetView<ProfileController> {
                       height: 50,
                       title: "save".tr.toUpperCase(),
                       isDisabledBtn: true,
-                      onTap: () {
-                        controller.saveNewUserToSql();
-                      },
+                      onTap: () => Get.back(),
                     ),
                   )
                 ],
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

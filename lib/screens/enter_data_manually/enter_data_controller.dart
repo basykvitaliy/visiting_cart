@@ -1,21 +1,19 @@
-
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
-import 'package:visiting_card/helpers/constants.dart';
-import 'package:visiting_card/model/user/user_model.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
-class ProfileController extends GetxController{
-  static ProfileController get to => Get.find();
+class EnterDataController extends GetxController with GetTickerProviderStateMixin {
+  static EnterDataController get to => Get.find();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
@@ -56,39 +54,6 @@ class ProfileController extends GetxController{
 
     image.value = File(tempPath);
     super.onInit();
-  }
-
-  Future<UserModel>? getUser()async{
-    var user = await SqlDbRepository.instance.getUser();
-    nameController.text = user!.name.toString();
-    phoneController.text = user.phone.toString();
-    emailController.text = user.email.toString();
-    birthDayController.text = user.birthday.toString();
-    idUser.value = user.id!;
-    return user;
-  }
-
-  Future<void> deleteUser()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var key = sharedPreferences.getString("cardKey");
-    await SqlDbRepository.instance.deleteAllUser();
-    nameController.clear();
-    phoneController.clear();
-    emailController.clear();
-    birthDayController.clear();
-    isLoadImage.value = false;
-  }
-
-  Future<AuthStatus> saveNewUserToSql()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var user = UserModel();
-    user.name = nameController.text;
-    user.phone = phoneController.text;
-    user.email = emailController.text;
-    user.birthday = birthDayController.text;
-    user.photo = imageBytes;
-    user.qrcode = sharedPreferences.getString(Keys.qrCodeSvg);
-    return await SqlDbRepository.instance.insertUser(user);
   }
 
   /// Show calendar for select date birth.

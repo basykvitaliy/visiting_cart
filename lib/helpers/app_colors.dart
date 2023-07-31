@@ -24,7 +24,7 @@ class AppTheme extends GetxService {
 
 class AppColors {
 
-  static const Color mainColor = Color(0xffffffff);
+  static const Color mainColor = Color(0xfff4f8ff);
   static const Color mainDarkThemeColor = Color(0xff303030);
   static const Color secondDarkThemeColor = Color(0xff2F5A6A);
   static const Color secondDarkDisableColor = Color(0xff6783a1);

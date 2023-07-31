@@ -4,4 +4,7 @@ class Routes {
   static const String favoriteScreen = "/favorite_screen";
   static const String infoScreen = "/info_screen";
   static const String settingsScreen = "/settings_screen";
+  static const String enterDataManuallyScreen = "/enter_data_manually_screen";
+  static const String payScreen = "/pay_screen";
+  static const String editProfileScreen = "/edit_profile_screen";
 }

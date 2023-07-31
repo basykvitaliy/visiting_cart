@@ -14,7 +14,7 @@ class SettingsScreen extends GetView<SettingsController> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Settings"),
+          title: Text("Settings", style: AppStyles.boldWhiteHeading,),
           centerTitle: true,
           automaticallyImplyLeading: false,
           backgroundColor: AppTheme().colors!.secondColors,

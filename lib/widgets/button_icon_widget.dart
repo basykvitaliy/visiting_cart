@@ -14,7 +14,7 @@ class ButtonIconWidget extends StatelessWidget {
 
   double? width;
   double? height;
-  SvgPicture icon;
+  Icon icon;
   final VoidCallback? onTap;
   bool? isDisabledBtn;
 

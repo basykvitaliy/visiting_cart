@@ -23,7 +23,7 @@ class ButtonWidget extends StatelessWidget {
           backgroundColor: isDisabledBtn! ? MaterialStateProperty.all<Color>(AppTheme().colors!.secondColors) : MaterialStateProperty.all<Color>(AppTheme().colors!.secondColorsDisable),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(6),
               )
           )
       ),

@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/model/user/user_model.dart';
 
 class SqlDbRepository {
   static final SqlDbRepository instance = SqlDbRepository._instance();
@@ -17,29 +18,14 @@ class SqlDbRepository {
   /// User model.
   String userTable = "user_table";
   String colId = "id";
-  String colName = "firstName";
-  String colLastName = "lastName";
+  String colName = "name";
   String colBirthday = "birthday";
   String colPhone = "phone";
   String colEmail = "email";
   String colPhoto = "photo";
-  String colCardType = "cardType";
-  String colCardKey = "cardKey";
-  String colBarcode = "barcode";
   String colQrCode = "qrcode";
   /// User model.
 
-  /// Personal card model.
-  String personalCardTable = "personal_card_table";
-  String colPersonalCardId = "id";
-  String colPersonalCardName = "name";
-  String colPersonalCardProfession = "profession";
-  String colPersonalCardPhone = "phone";
-  String colPersonalCardEmail = "email";
-  String colPersonalCardPhoto = "photo";
-  String colPersonalCardBarcode = "barcode";
-  String colPersonalCardQrCode = "qrcode";
-  /// Personal card model.
 
   /// Visitka model.
     String myCardTable = "my_card_table";
@@ -47,27 +33,17 @@ class SqlDbRepository {
     String colType = "type";
     String colNameUser = "nameUser";
     String colCompanyName = "companyName";
-    String colKindOfActivity = "kindOfActivity";
+    String colProfession = "profession";
     String colCardPhone = "phone";
     String colEMail = "email";
     String colAddress = "address";
-    String colWorkDay = "days";
     String colSocialNetworks = "socialNetworks";
-    String colLogoPath = "logoPath";
-    String colBackgroundPath = "backgroundPath";
+    String colLogo = "logo";
+    String colBackgroundColor = "backgroundColor";
     String colCardPhoto = "photo";
     String colFavorite = "isFavorite";
     /// Visitka model.
 
-  /// Club card model.
-  String clubCardTable = "club_card_table";
-  String colClubCardId = "id";
-  String colClubCardTitle = "title";
-  String colClubCardColor = "color";
-  String colClubCardPhoto = "photo";
-  String colClubCardCode = "code";
-  String colClubCardFavorite = "isFavorite";
-  /// Club card model.
 
   Future<Database> get db async {
     _db ??= await _initDB();
@@ -86,26 +62,11 @@ class SqlDbRepository {
     await db.execute("CREATE TABLE $userTable("
         "$colId INTEGER PRIMARY KEY AUTOINCREMENT, "
         "$colName TEXT, "
-        "$colLastName TEXT, "
         "$colBirthday TEXT, "
         "$colPhone TEXT, "
         "$colEmail TEXT, "
         "$colPhoto TEXT, "
-        "$colCardType TEXT, "
-        "$colCardKey TEXT,"
-        "$colBarcode TEXT,"
         "$colQrCode TEXT) "
-    );
-
-    await db.execute("CREATE TABLE $personalCardTable("
-        "$colPersonalCardId INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "$colPersonalCardName TEXT, "
-        "$colPersonalCardProfession TEXT, "
-        "$colPersonalCardPhone TEXT, "
-        "$colPersonalCardEmail TEXT, "
-        "$colPersonalCardPhoto TEXT,"
-        "$colPersonalCardBarcode TEXT,"
-        "$colPersonalCardQrCode TEXT) "
     );
 
     await db.execute("CREATE TABLE $myCardTable("
@@ -113,44 +74,35 @@ class SqlDbRepository {
         "$colType INTEGER, "
         "$colNameUser TEXT, "
         "$colCompanyName TEXT, "
-        "$colKindOfActivity TEXT, "
+        "$colProfession TEXT, "
         "$colPhone TEXT, "
         "$colEMail TEXT, "
         "$colAddress TEXT, "
-        "$colWorkDay TEXT, "
         "$colSocialNetworks TEXT, "
-        "$colLogoPath TEXT, "
-        "$colBackgroundPath TEXT,"
+        "$colLogo TEXT, "
+        "$colBackgroundColor TEXT,"
         "$colCardPhoto TEXT,"
         "$colFavorite INTEGER) "
     );
 
-    await db.execute("CREATE TABLE $clubCardTable("
-        "$colClubCardId INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "$colClubCardTitle TEXT, "
-        "$colClubCardCode TEXT, "
-        "$colClubCardColor INTEGER, "
-        "$colClubCardFavorite INTEGER, "
-        "$colPersonalCardPhoto TEXT) "
-    );
   }
 
-  // Future<UserModel?> getUser() async {
-  //   Database db = await this.db;
-  //   final List<Map<String, Object?>> userModelMap = await db.query(userTable);
-  //
-  //   if (userModelMap.isNotEmpty) {
-  //     UserModel userModel = UserModel.fromJson(userModelMap.last);
-  //
-  //     Uint8List? photoBytes = userModelMap.last[colPhoto] as Uint8List?;
-  //     userModel.photo = photoBytes;
-  //
-  //     return userModel;
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  //
+  Future<UserModel?> getUser() async {
+    Database db = await this.db;
+    final List<Map<String, Object?>> userModelMap = await db.query(userTable);
+
+    if (userModelMap.isNotEmpty) {
+      UserModel userModel = UserModel.fromJson(userModelMap.last);
+
+      Uint8List? photoBytes = userModelMap.last[colPhoto] as Uint8List?;
+      userModel.photo = photoBytes;
+
+      return userModel;
+    } else {
+      return null;
+    }
+  }
+
   // Future<List<MyCardModel>> getUserCards() async {
   //   Database db = await this.db;
   //   final List<Map<String, dynamic>> userCardsMapList = await db.query(myCardTable);
@@ -284,17 +236,17 @@ class SqlDbRepository {
   //   return _status!;
   // }
   //
-  // Future<AuthStatus> insertUser(UserModel userModel) async {
-  //   Database db = await this.db;
-  //   final result = await db.insert(userTable, userModel.toJson());
-  //   if(result != null){
-  //     _status = AuthStatus.successful;
-  //   }else{
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Save user");
-  //   return _status!;
-  // }
+  Future<AuthStatus> insertUser(UserModel userModel) async {
+    Database db = await this.db;
+    final result = await db.insert(userTable, userModel.toJson());
+    if(result != null){
+      _status = AuthStatus.successful;
+    }else{
+      _status = AuthStatus.error;
+    }
+    print("Save user");
+    return _status!;
+  }
   //
   // Future<AuthStatus> insertCard(MyCardModel card) async {
   //   Database db = await this.db;
@@ -361,32 +313,23 @@ class SqlDbRepository {
   //   return _status!;
   // }
   //
-  // Future<AuthStatus> updateUser(UserModel user) async {
-  //   Database db = await this.db;
-  //   final result = await db.update(
-  //     userTable,
-  //     user.toJson(),
-  //     where: "$colId = ?",
-  //     whereArgs: [user.id],
-  //   );
-  //   if(result != null){
-  //     _status = AuthStatus.successful;
-  //   }else{
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Save user");
-  //   return _status!;
-  // }
-
-  Future<bool> deleteClubCard(String title) async {
+  Future<AuthStatus> updateUser(UserModel user) async {
     Database db = await this.db;
-    final result = await db.delete(clubCardTable, where: "$colClubCardTitle = ?", whereArgs: [title]);
+    final result = await db.update(
+      userTable,
+      user.toJson(),
+      where: "$colId = ?",
+      whereArgs: [user.id],
+    );
     if(result != null){
-      return true;
+      _status = AuthStatus.successful;
     }else{
-      return false;
+      _status = AuthStatus.error;
     }
+    print("Save user");
+    return _status!;
   }
+
 
   Future<bool> deleteCard(String nameUser) async {
     Database db = await this.db;
@@ -400,7 +343,6 @@ class SqlDbRepository {
 
   Future<void> deleteAllUser() async {
     Database db = await this.db;
-    await db.delete(personalCardTable);
     await db.delete(userTable);
   }
 

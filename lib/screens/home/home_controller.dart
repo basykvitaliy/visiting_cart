@@ -6,8 +6,18 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 
 class HomeController extends GetxController with GetTickerProviderStateMixin {
   static HomeController get to => Get.find();
+  FocusNode focusNode = FocusNode();
+  TextEditingController searchController = TextEditingController(text: "Search");
+
+  RxBool isFavorite = false.obs;
+  void toggleFavorite() => isFavorite.toggle();
+
+  Future<List<dynamic>> search(String query)async{
+    return [];
+  }
 
 }
