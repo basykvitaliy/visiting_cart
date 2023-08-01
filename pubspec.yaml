@@ -68,6 +68,7 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_typeahead: ^4.3.2
   animations: ^2.0.0
+  animated_toggle_switch: ^0.7.0
 
 dev_dependencies:
   flutter_test:

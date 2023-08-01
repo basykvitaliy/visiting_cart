@@ -17,7 +17,11 @@ class Messages extends Translations {
           "signIn": "Sign In",
           "addDataManually": "Add data manually",
           "name": "Name",
+          "companyName": "Company name",
+          "address": "Address",
           "profession": "Profession",
+          "personal": "Personal",
+          "clubCard": "Club card",
         },
       };
 }

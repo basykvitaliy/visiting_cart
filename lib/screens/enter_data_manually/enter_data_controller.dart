@@ -1,13 +1,9 @@
 import 'dart:io';
-
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
@@ -40,34 +36,17 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
   RxInt idUser = 0.obs;
   RxBool isLargeAnimation = false.obs;
 
-  DateTime _date = DateTime.now();
-  final DateFormat _dateFormat = DateFormat("MMM dd, yyyy");
-
   @override
   void onInit()async {
-    const imagePath = 'assets/images/login_bg.png';
+    const imagePath = 'assets/images/bgcard.png';
     final byteData = await rootBundle.load(imagePath);
 
     final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/login_bg.png';
+    final tempPath = '${tempDir.path}/bgcard.png';
     await File(tempPath).writeAsBytes(byteData.buffer.asUint8List());
 
     image.value = File(tempPath);
     super.onInit();
-  }
-
-  /// Show calendar for select date birth.
-  void handleDatePicker(BuildContext context) async {
-    DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-    if (date != null && date != _date) {
-      _date = date;
-    }
-    birthDayController.text = _dateFormat.format(date!);
   }
 
   Future pickImage(ImageSource source) async {
