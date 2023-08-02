@@ -60,6 +60,7 @@ class AppColors {
 
 class AppStyles {
 
+  static const regularBodyDarkText10 = TextStyle(fontSize: 10, fontWeight: FontWeight.w400, color: Colors.black);
   static const regularBodyDarkText12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.black);
   static const regularDarkText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black);
   static const regularDarkTextBold16 = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black);
@@ -76,6 +77,7 @@ class AppStyles {
   static const boldGreyHeading22 = TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.grey);
 
   static const regularBodyWhiteText = TextStyle(fontSize: 8, fontWeight: FontWeight.w400, color: Colors.white);
+  static const regularWhiteText12 = TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.white);
   static const regularWhiteText14 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Colors.white);
   static const regularWhiteText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.white);
   static const regularWhiteHeading18 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: Colors.white);

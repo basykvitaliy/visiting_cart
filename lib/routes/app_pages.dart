@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/routes/routes.dart';
+import 'package:visiting_card/screens/enter_data_manually/add_logo_screen/add_logo_card_screen.dart';
 import 'package:visiting_card/screens/enter_data_manually/enter_data_screen.dart';
 import 'package:visiting_card/screens/favorite/favorite_binding.dart';
 import 'package:visiting_card/screens/favorite/favorite_screen.dart';
@@ -34,7 +36,7 @@ class AppPages {
     ),
     GetPage(
       name: Routes.infoScreen,
-      page: () => InfoUserScreen(),
+      page: () => InfoUserScreen(cardModel: CardModel(),),
     ),
     GetPage(
       name: Routes.settingsScreen,
@@ -53,6 +55,10 @@ class AppPages {
     GetPage(
       name: Routes.editProfileScreen,
       page: () => EditProfileScreen(),
+    ),
+    GetPage(
+      name: Routes.addLogoScreen,
+      page: () => AddLogoCardScreen(),
     ),
   ];
 }

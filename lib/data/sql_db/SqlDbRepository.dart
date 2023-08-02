@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/model/my_card/address_model.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/model/user/user_model.dart';
 
 class SqlDbRepository {
@@ -33,11 +35,13 @@ class SqlDbRepository {
     String colType = "type";
     String colNameUser = "nameUser";
     String colCompanyName = "companyName";
+    String colCardName = "cardName";
+    String colBarcode = "barcode";
     String colProfession = "profession";
     String colCardPhone = "phone";
     String colEMail = "email";
+    String colDate = "date";
     String colAddress = "address";
-    String colSocialNetworks = "socialNetworks";
     String colLogo = "logo";
     String colBackgroundColor = "backgroundColor";
     String colCardPhoto = "photo";
@@ -74,11 +78,13 @@ class SqlDbRepository {
         "$colType INTEGER, "
         "$colNameUser TEXT, "
         "$colCompanyName TEXT, "
+        "$colCardName TEXT, "
+        "$colBarcode TEXT, "
         "$colProfession TEXT, "
         "$colPhone TEXT, "
         "$colEMail TEXT, "
         "$colAddress TEXT, "
-        "$colSocialNetworks TEXT, "
+        "$colDate TEXT, "
         "$colLogo TEXT, "
         "$colBackgroundColor TEXT,"
         "$colCardPhoto TEXT,"
@@ -103,52 +109,44 @@ class SqlDbRepository {
     }
   }
 
-  // Future<List<MyCardModel>> getUserCards() async {
-  //   Database db = await this.db;
-  //   final List<Map<String, dynamic>> userCardsMapList = await db.query(myCardTable);
-  //   final List<MyCardModel> cardsList = [];
-  //
-  //   for (var element in userCardsMapList) {
-  //     // Розпакування значення colAddress
-  //     String addressString = element[colAddress];
-  //     Map<String, dynamic> addressJson = jsonDecode(addressString);
-  //     AddressModel address = AddressModel.fromJson(addressJson);
-  //
-  //     // Отримання байтів фотографії з колонки photo
-  //     Uint8List? photoBytes = element[colCardPhoto] as Uint8List?;
-  //
-  //     // Декодування інших полів
-  //     List<WorkTime> workDays = (jsonDecode(element[colWorkDay]) as List)
-  //         .map((day) => WorkTime.fromJson(day))
-  //         .toList();
-  //
-  //     List<SocialNetworks> socialNetworks = (jsonDecode(element[colSocialNetworks]) as List)
-  //         .map((network) => SocialNetworks.fromJson(network))
-  //         .toList();
-  //
-  //     MyCardModel card = MyCardModel(
-  //       id: element[colCardId],
-  //       address: address,
-  //       days: workDays,
-  //       socialNetworks: socialNetworks,
-  //       type: element[colType],
-  //       nameUser: element[colNameUser],
-  //       companyName: element[colCompanyName],
-  //       kindOfActivity: element[colKindOfActivity],
-  //       phone: element[colPhone],
-  //       email: element[colEMail],
-  //       logoPath: element[colLogoPath],
-  //       backgroundPath: element[colBackgroundPath],
-  //       photo: photoBytes,
-  //         isFavorite: element[colFavorite]
-  //     );
-  //
-  //     cardsList.add(card);
-  //   }
-  //
-  //   return cardsList;
-  // }
-  //
+  Future<List<CardModel>> getUserCards() async {
+    Database db = await this.db;
+    final List<Map<String, dynamic>> userCardsMapList = await db.query(myCardTable);
+    final List<CardModel> cardsList = [];
+
+    for (var element in userCardsMapList) {
+      // Розпакування значення colAddress
+      String addressString = element[colAddress];
+      Map<String, dynamic> addressJson = jsonDecode(addressString);
+      AddressModel address = AddressModel.fromJson(addressJson);
+
+      // Отримання байтів фотографії з колонки photo
+      Uint8List? photoBytes = element[colCardPhoto] as Uint8List?;
+
+      CardModel card = CardModel(
+        id: element[colCardId],
+        address: address,
+        type: element[colType],
+        nameUser: element[colNameUser],
+        companyName: element[colCompanyName],
+        cardName: element[colCardName],
+        barcode: element[colBarcode],
+        date: element[colDate],
+        profession: element[colProfession],
+        phone: element[colPhone],
+        email: element[colEMail],
+        logo: element[colLogo],
+        backgroundColor: element[colBackgroundColor],
+        photo: photoBytes,
+          isFavorite: element[colFavorite]
+      );
+
+      cardsList.add(card);
+    }
+
+    return cardsList;
+  }
+
   // Future<List<PersonalCardModel>> getPersonalCards() async {
   //   Database db = await this.db;
   //   final List<Map<String, dynamic>> personalCardsMapList = await db.query(personalCardTable);
@@ -236,6 +234,7 @@ class SqlDbRepository {
   //   return _status!;
   // }
   //
+
   Future<AuthStatus> insertUser(UserModel userModel) async {
     Database db = await this.db;
     final result = await db.insert(userTable, userModel.toJson());
@@ -247,24 +246,22 @@ class SqlDbRepository {
     print("Save user");
     return _status!;
   }
-  //
-  // Future<AuthStatus> insertCard(MyCardModel card) async {
-  //   Database db = await this.db;
-  //   Map<String, dynamic> cardJson = card.toJson();
-  //   cardJson[colAddress] = jsonEncode(cardJson[colAddress]);
-  //   cardJson[colWorkDay] = jsonEncode(cardJson[colWorkDay]);
-  //   cardJson[colSocialNetworks] = jsonEncode(cardJson[colSocialNetworks]);
-  //
-  //   final result = await db.insert(myCardTable, cardJson);
-  //   if(result != null){
-  //     _status = AuthStatus.successful;
-  //   }else{
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Save ");
-  //   return _status!;
-  // }
-  //
+
+  Future<AuthStatus> insertCard(CardModel card) async {
+    Database db = await this.db;
+    Map<String, dynamic> cardJson = card.toJson();
+    cardJson[colAddress] = jsonEncode(cardJson[colAddress]);
+
+    final result = await db.insert(myCardTable, cardJson);
+    if(result != null){
+      _status = AuthStatus.successful;
+    }else{
+      _status = AuthStatus.error;
+    }
+    print("Save ");
+    return _status!;
+  }
+
   // Future<AuthStatus> updatePersonalCard(PersonalCardModel card) async {
   //   Database db = await this.db;
   //   Map<String, dynamic> cardJson = card.toJson();
@@ -331,9 +328,9 @@ class SqlDbRepository {
   }
 
 
-  Future<bool> deleteCard(String nameUser) async {
+  Future<bool> deleteCard(String id) async {
     Database db = await this.db;
-    final result = await db.delete(myCardTable, where: "$colNameUser = ?", whereArgs: [nameUser]);
+    final result = await db.delete(myCardTable, where: "$colCardId = ?", whereArgs: [id]);
     if(result != null){
       return true;
     }else{

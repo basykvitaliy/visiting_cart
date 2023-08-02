@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 
 class ImageUtils {
@@ -111,6 +112,12 @@ int millisecondsToSeconds(int ms) => ms ~/ 1000;
 
 DateTime dateTimeFromSeconds(int seconds, {bool isUtc = false}) {
   return DateTime.fromMillisecondsSinceEpoch(seconds * 1000, isUtc: isUtc);
+}
+
+String getDateTimeNow(){
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat('dd.MM.yyyy HH:mm').format(now);
+  return formattedDate;
 }
 
 String? getFilenameFromUrl(String url) {

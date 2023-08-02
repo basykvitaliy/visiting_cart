@@ -47,11 +47,11 @@ class ProfileController extends GetxController{
 
   @override
   void onInit()async {
-    const imagePath = 'assets/images/login_bg.png';
+    const imagePath = 'assets/images/bg_card.png';
     final byteData = await rootBundle.load(imagePath);
 
     final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/login_bg.png';
+    final tempPath = '${tempDir.path}/bg_card.png';
     await File(tempPath).writeAsBytes(byteData.buffer.asUint8List());
 
     image.value = File(tempPath);

@@ -7,4 +7,5 @@ class Routes {
   static const String enterDataManuallyScreen = "/enter_data_manually_screen";
   static const String payScreen = "/pay_screen";
   static const String editProfileScreen = "/edit_profile_screen";
+  static const String addLogoScreen = "/add_logo_screen";
 }

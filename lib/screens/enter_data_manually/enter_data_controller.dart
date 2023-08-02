@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,6 +7,12 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
+import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
+import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/helpers/utils.dart';
+import 'package:visiting_card/model/my_card/address_model.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
 class EnterDataController extends GetxController with GetTickerProviderStateMixin {
@@ -13,14 +20,17 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
-  Rx<bool> isValidEmail = true.obs;
   Rx<bool> isValidName = true.obs;
   Rx<bool> isValidPhone = true.obs;
   bool isName(String input) => input.isNotEmpty;
+  bool isCardName(String input) => input.isNotEmpty;
+  bool isBarcode(String input) => input.isNotEmpty;
   bool isPhone(String input) => RegExp(r'(^(?:[+38])?[0-9]{10,12}$)', caseSensitive: false).hasMatch(input);
   TextEditingController nameController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController cardNameController = TextEditingController();
+  TextEditingController barcodeController = TextEditingController();
   TextEditingController professionController = TextEditingController();
-  TextEditingController birthDayController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   RxString proffesional = ''.obs;
@@ -34,7 +44,8 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
   RxString imageClubPath = ''.obs;
   Uint8List? imageBytes;
   RxInt idUser = 0.obs;
-  RxBool isLargeAnimation = false.obs;
+  RxBool isSetType = false.obs;
+  AddressModel address = AddressModel();
 
   @override
   void onInit()async {
@@ -49,6 +60,38 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
     super.onInit();
   }
 
+  Future<AuthStatus> saveNewPersonCard()async{
+    addAddress();
+    var card = CardModel();
+    card.type = isSetType.value ? 1 : 0;
+    card.nameUser = nameController.text;
+    card.companyName = companyNameController.text;
+    card.cardName = cardNameController.text;
+    card.barcode = barcodeController.text;
+    card.profession = professionController.text;
+    card.phone = phoneController.text;
+    card.email = emailController.text;
+    card.logo = "";
+    card.photo = imageBytes;
+    card.address = address;
+    card.date = getDateTimeNow();
+    card.isFavorite = 0;
+    card.backgroundColor = Colors.primaries[Random().nextInt(Colors.primaries.length)].shade200.withOpacity(0.5).value.toRadixString(16);
+
+    return await SqlDbRepository.instance.insertCard(card);
+  }
+
+  Future<void> addAddress()async{
+    address.office = '';
+    address.house = '';
+    address.street = '';
+    address.city = '';
+    addressController.text =
+        "${address.office.toString()}, "
+        "${address.house.toString()}, "
+        "${address.city.toString()}, "
+        "${address.street.toString()}";
+  }
   Future pickImage(ImageSource source) async {
     try {
       final image = await _picker.pickImage(source: source);
@@ -88,7 +131,7 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
   Future<void> cropSImage(File imageFile) async {
     _croppedFile = await ImageCropper().cropImage(
       sourcePath: imageFile.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
         CropAspectRatioPreset.original,

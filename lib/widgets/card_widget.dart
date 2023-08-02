@@ -2,23 +2,26 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
+import 'package:syncfusion_flutter_barcodes/barcodes.dart';
+import 'package:themed/themed.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({
     super.key,
-    required this.isFavorite,
+    required this.model,
     required this.favorite,
   });
 
-  final bool isFavorite;
+  final CardModel model;
   final Callback favorite;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Colors.primaries[Random().nextInt(Colors.primaries.length)].shade200.withOpacity(0.5),
+      color: Color(int.parse(model.backgroundColor!, radix: 16)),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(7),
       ),
@@ -33,15 +36,25 @@ class CardWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: 100,
-                  height: 20,
-                  decoration: const BoxDecoration(
-                      color: AppColors.secondColor
-                  ),
-                  child: Text("Business", style: AppStyles.regularWhiteText14, textAlign: TextAlign.center,),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 20,
+                      decoration: BoxDecoration(color: Color(int.parse(model.backgroundColor!, radix: 16)).withOpacity(1)),
+                    ),
+                    Text(
+                      model.type == 0 ? "Personal" : "Business",
+                      style: AppStyles.regularWhiteText12,
+                    )
+                  ],
                 ),
-                Text("22.13.2033", style: AppStyles.regularBodyDarkText12, textAlign: TextAlign.center,)
+                Text(
+                  model.date.toString(),
+                  style: AppStyles.regularBodyDarkText10,
+                  textAlign: TextAlign.center,
+                )
               ],
             ),
             Row(
@@ -53,23 +66,59 @@ class CardWidget extends StatelessWidget {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: AppColors.whiteColor),
-                          borderRadius: BorderRadius.circular(7),
-
+                        border: Border.all(width: 1, color: AppColors.whiteColor),
+                        borderRadius: BorderRadius.circular(7),
                       ),
-                      child: const Icon(Icons.person),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(7),
+                        child: model.photo != null
+                            ? Image.memory(model.photo!, fit: BoxFit.cover)
+                            : Icon(
+                                Icons.photo,
+                                size: 55,
+                                color: Color(int.parse(model.backgroundColor!, radix: 16)),
+                              ),
+                      ),
                     ),
                     const SizedBox(width: 16),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Name Surname", style: AppStyles.regularDarkTextBold16, textAlign: TextAlign.center,),
-                        SizedBox(height: 8,),
-                        Text("Profession", style: AppStyles.regularDarkText16, textAlign: TextAlign.center,),
-                        SizedBox(height: 8,),
-                        Text("+38065774567", style: AppStyles.regularDarkTextBold16, textAlign: TextAlign.center,),
-                      ],
+                    SizedBox(
+                      height: 100,
+                      child: model.type == 0
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  model.nameUser.toString(),
+                                  style: AppStyles.regularHeading18),
+                                Text(
+                                  model.profession.toString(),
+                                  style: AppStyles.regularDarkText16,
+                                ),
+                                Text(
+                                  model.phone != null ? model.phone.toString() : model.barcode.toString(),
+                                  style: AppStyles.regularDarkTextBold16,
+                                ),
+                              ],
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  model.cardName.toString(),
+                                  style: AppStyles.regularHeading18
+                                ),
+                                SizedBox(
+                                  width: 115,
+                                  height: 40,
+                                  child: SfBarcodeGenerator(
+                                    value: model.barcode.toString(),
+                                    showValue: true,
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ],
                 ),
@@ -77,9 +126,17 @@ class CardWidget extends StatelessWidget {
                   onTap: favorite,
                   child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: !isFavorite
-                          ? Icon(Icons.favorite_border, size: 30, color: AppColors.whiteColor,)
-                          : Icon(Icons.favorite, size: 30, color: AppColors.whiteColor,)),
+                      child: model.isFavorite == 0
+                          ? Icon(
+                              Icons.favorite_border,
+                              size: 30,
+                            color: Color(int.parse(model.backgroundColor!, radix: 16)).withOpacity(1)
+                            )
+                          : Icon(
+                              Icons.favorite,
+                              size: 30,
+                            color: Color(int.parse(model.backgroundColor!, radix: 16)).withOpacity(1)
+                      )),
                 )
               ],
             ),

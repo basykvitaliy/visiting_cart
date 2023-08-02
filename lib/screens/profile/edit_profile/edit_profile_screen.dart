@@ -19,13 +19,13 @@ class EditProfileScreen extends GetView<ProfileController> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "myAccount".tr.toUpperCase(),
+            "editAccount".tr,
             style: AppStyles.boldWhiteHeading,
           ),
           centerTitle: true,
           elevation: 0,
           automaticallyImplyLeading: true,
-          backgroundColor: AppTheme().colors!.mainBackground,
+          backgroundColor: AppTheme().colors!.secondColors,
         ),
         backgroundColor: AppTheme().colors!.mainBackground,
         body: SingleChildScrollView(

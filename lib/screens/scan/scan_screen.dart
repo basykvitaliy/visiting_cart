@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/scan/scan_controller.dart';
 import 'package:visiting_card/widgets/scan_screen_widget.dart';
 
@@ -18,7 +19,7 @@ class ScanScreen extends GetView<ScanController> {
       appBar: AppBar(
         backgroundColor: AppTheme().colors!.secondColors,
         automaticallyImplyLeading: false,
-        title: Text('scanCard'.tr.toUpperCase(),
+        title: Text('scanCard'.tr,
           style: AppStyles.boldWhiteHeading,
           textAlign: TextAlign.center,
         ),
@@ -26,7 +27,7 @@ class ScanScreen extends GetView<ScanController> {
       ),
       backgroundColor: AppTheme().colors!.mainBackground,
       body: Obx(() =>
-          controller.barcodeMainValue.value == '' ? ScanSreenWidget(controller: controller) : const InfoUserScreen()),
+          controller.barcodeMainValue.value == '' ? ScanSreenWidget(controller: controller) : InfoUserScreen(cardModel: CardModel(),)),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/scan/info_user_screen.dart';
 import 'package:visiting_card/widgets/card_widget.dart';
 
@@ -14,7 +15,7 @@ class FavoriteScreen extends GetView<FavoriteController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Favorite", style: AppStyles.boldWhiteHeading,),
+        title: Text("favorite".tr, style: AppStyles.boldWhiteHeading,),
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppTheme().colors!.secondColors,
@@ -26,7 +27,7 @@ class FavoriteScreen extends GetView<FavoriteController> {
         return OpenContainer(
           transitionType: _transitionType,
           openBuilder: (BuildContext context, VoidCallback _) {
-            return InfoUserScreen();
+            return Container();
           },
           closedElevation: 0.0,
           closedColor: AppColors.mainColor,
@@ -39,7 +40,7 @@ class FavoriteScreen extends GetView<FavoriteController> {
           closedBuilder: (BuildContext context, VoidCallback openContainer) {
             return CardWidget(
               favorite: () {},
-              isFavorite: true,
+              model: CardModel(),
             );
           },
         );

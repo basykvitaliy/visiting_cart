@@ -12,7 +12,7 @@ class PayScreen extends GetView<PayController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pay", style: AppStyles.boldWhiteHeading,),
+        title: Text("pay".tr, style: AppStyles.boldWhiteHeading,),
         centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: AppTheme().colors!.secondColors,

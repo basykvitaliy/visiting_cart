@@ -17,7 +17,7 @@ class ProfileScreen extends GetView<ProfileController> {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            "Profile",
+            "profile".tr,
             style: AppStyles.boldWhiteHeading,
           ),
           centerTitle: true,
