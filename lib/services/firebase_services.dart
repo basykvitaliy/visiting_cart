@@ -3,18 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/model/logos/logos_model.dart';
 
 class FirebaseServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   AuthStatus _status = AuthStatus.unknown;
   static RxString notificationId = "".obs;
 
-  CollectionReference collectionManagers = FirebaseFirestore.instance.collection("managers");
-  CollectionReference collectionShops = FirebaseFirestore.instance.collection("shops");
-  CollectionReference collectionProducts = FirebaseFirestore.instance.collection("products");
-  CollectionReference collectionDefectiveProducts = FirebaseFirestore.instance.collection("defective_products");
-  CollectionReference collectionNotifications = FirebaseFirestore.instance.collection("notifications");
-  CollectionReference collectionBuyers = FirebaseFirestore.instance.collection("buyers");
+  CollectionReference collectionLogos = FirebaseFirestore.instance.collection("logos");
 
   String getUserId() => _auth.currentUser!.uid;
 
@@ -47,34 +43,34 @@ class FirebaseServices {
   // }
 
   /// Write product to firebase.
-  Future<AuthStatus> writeProduct(Map<String, dynamic> product, String uId) async {
-    try {
-      await collectionProducts.doc(uId).set(product).whenComplete(() {
-        _status = AuthStatus.successful;
-      });
-    } on FirebaseException catch (e, s) {
-      _status = AuthStatus.firebaseError;
-      print("ERROR FIREBASE CATCH: $e");
-    } catch (e) {
-      _status = AuthStatus.error;
-    }
-    return _status;
-  }
+  // Future<LogosModel> getLogos() async {
+  //   try {
+  //     await collectionLogos.doc(uId).set(product).whenComplete(() {
+  //       _status = AuthStatus.successful;
+  //     });
+  //   } on FirebaseException catch (e, s) {
+  //     _status = AuthStatus.firebaseError;
+  //     print("ERROR FIREBASE CATCH: $e");
+  //   } catch (e) {
+  //     _status = AuthStatus.error;
+  //   }
+  //   return _status;
+  // }
 
   /// Write defective product to firebase.
-  Future<AuthStatus> writeDefectiveProduct(Map<String, dynamic> defectiveProduct, String uId) async {
-    try {
-      await collectionDefectiveProducts.doc(uId).set(defectiveProduct).whenComplete(() {
-        _status = AuthStatus.successful;
-      });
-    } on FirebaseException catch (e, s) {
-      _status = AuthStatus.firebaseError;
-      print("ERROR FIREBASE CATCH: $e");
-    } catch (e) {
-      _status = AuthStatus.error;
-    }
-    return _status;
-  }
+  // Future<AuthStatus> writeDefectiveProduct(Map<String, dynamic> defectiveProduct, String uId) async {
+  //   try {
+  //     await collectionDefectiveProducts.doc(uId).set(defectiveProduct).whenComplete(() {
+  //       _status = AuthStatus.successful;
+  //     });
+  //   } on FirebaseException catch (e, s) {
+  //     _status = AuthStatus.firebaseError;
+  //     print("ERROR FIREBASE CATCH: $e");
+  //   } catch (e) {
+  //     _status = AuthStatus.error;
+  //   }
+  //   return _status;
+  // }
 
   /// Sign in account.
   Future<String?>? signIn(String email, String password) async {
@@ -102,24 +98,22 @@ class FirebaseServices {
     return _status;
   }
 
-  // /// Get managers from firebase firestore.
-  // Future<List<ManagerModel>> getManager() async {
-  //   List<ManagerModel> listManagers = List<ManagerModel>.empty(growable: true);
-  //
-  //   try {
-  //     QuerySnapshot snapshot = await collectionManagers.get();
-  //
-  //     for (var manager in snapshot.docs) {
-  //       listManagers.add(ManagerModel.fromJson(manager.data() as Map<String, dynamic>));
-  //     }
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //   }
-  //   return listManagers;
-  // }
-  //
+  /// Get managers from firebase firestore.
+  Future<List<LogosModel>> getLogos() async {
+    List<LogosModel> listManagers = List<LogosModel>.empty(growable: true);
+    try {
+      QuerySnapshot snapshot = await collectionLogos.get();
+      for (var logo in snapshot.docs) {
+        listManagers.add(LogosModel.fromJson(logo.data() as Map<String, dynamic>));
+      }
+    } on FirebaseException catch (e, s) {
+      print("ERROR FIREBASE CATCH: $e");
+    } catch (e) {
+      print("ERROR CATCH: $e");
+    }
+    return listManagers;
+  }
+
   // /// Get shops.
   // Future<ManagerModel> getManagerFromId(String id) async {
   //   QueryDocumentSnapshot<Object?> managerModel;
@@ -296,24 +290,24 @@ class FirebaseServices {
   // }
 
   /// Get shops ids.
-  Future<List<String>> getShopsId() async {
-    List<String> listShops = List<String>.empty(growable: true);
-    try {
-      QuerySnapshot snapshot = await collectionShops.get();
-      for (var shop in snapshot.docs) {
-        listShops.add(shop.id);
-      }
-    } on FirebaseException catch (e, s) {
-      print("ERROR FIREBASE CATCH: $e");
-    } catch (e) {
-      print("ERROR CATCH: $e");
-    }
-    return listShops.toList();
-  }
+  // Future<List<String>> getShopsId() async {
+  //   List<String> listShops = List<String>.empty(growable: true);
+  //   try {
+  //     QuerySnapshot snapshot = await collectionShops.get();
+  //     for (var shop in snapshot.docs) {
+  //       listShops.add(shop.id);
+  //     }
+  //   } on FirebaseException catch (e, s) {
+  //     print("ERROR FIREBASE CATCH: $e");
+  //   } catch (e) {
+  //     print("ERROR CATCH: $e");
+  //   }
+  //   return listShops.toList();
+  // }
 
   /// Update field last_activity from collection manager.
   Future<void> updateManager(String time) async {
-    await collectionManagers
+    await collectionLogos
         .doc(getUserId())
         .update({'last_activity': time})
         .then((_) => print('Updated'))

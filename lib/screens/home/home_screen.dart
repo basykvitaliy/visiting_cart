@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/routes/routes.dart';
-import 'package:visiting_card/screens/scan/info_user_screen.dart';
+import 'package:visiting_card/screens/scan/info_card_screen.dart';
 import 'package:visiting_card/widgets/card_widget.dart';
 
 import 'home_controller.dart';
@@ -20,9 +20,12 @@ class HomeScreen extends GetView<HomeController> {
   Widget build(BuildContext context) {
 
     controller.getCardList();
-
     return Scaffold(
       backgroundColor: AppTheme().colors!.mainBackground,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () { Get.toNamed(Routes.enterDataManuallyScreen); },
+        child: Icon(Icons.add),
+      ),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -62,7 +65,7 @@ class HomeScreen extends GetView<HomeController> {
                   child: OpenContainer(
                     transitionType: _transitionType,
                     openBuilder: (BuildContext context, VoidCallback _) {
-                      return InfoUserScreen(cardModel: controller.cardList[index]);
+                      return InfoCardScreen(cardModel: controller.cardList[index]);
                     },
                     closedElevation: 0.0,
                     closedColor: AppColors.mainColor,

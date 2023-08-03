@@ -27,14 +27,14 @@ class ScanSreenWidget extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.only( left: 16, right: 16, bottom: 16),
-                  height: 320,
+                  height: MediaQuery.of(context).size.height / 1.5,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: controller.buildQrView(context),
                   ),
                 ),
                 Obx(() => Positioned(
-                  bottom: 8,
+                  bottom: 24,
                   left: 0,
                   right: 0,
                   child: GestureDetector(
@@ -54,31 +54,14 @@ class ScanSreenWidget extends StatelessWidget {
                 )),
               ],
             ),
-            Column(
-              children: [
-                Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ButtonWidget(
-                          height: 50,
-                          title: "addDataManually".tr.toUpperCase(),
-                          isDisabledBtn: true,
-                          onTap: (){
-                            controller.controllerQr.stopCamera();
-                            Get.toNamed(Routes.enterDataManuallyScreen);
-                          }
-                        ),
-                      ),
-                const SizedBox(height: 8),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ButtonWidget(
-                    height: 50,
-                    title: "cansel".tr.toUpperCase(),
-                    isDisabledBtn: true,
-                    onTap: () => Get.back(),
-                  ),
-                )
-              ],
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: ButtonWidget(
+                height: 50,
+                title: "cansel".tr.toUpperCase(),
+                isDisabledBtn: true,
+                onTap: () => Get.back(),
+              ),
             ),
 
           ],

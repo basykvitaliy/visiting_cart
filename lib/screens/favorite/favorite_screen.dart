@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
-import 'package:visiting_card/screens/scan/info_user_screen.dart';
+import 'package:visiting_card/screens/scan/info_card_screen.dart';
 import 'package:visiting_card/widgets/card_widget.dart';
 
 import 'favorite_controller.dart';

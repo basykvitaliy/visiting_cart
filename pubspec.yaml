@@ -70,6 +70,7 @@ dependencies:
   flutter_typeahead: ^4.3.2
   animations: ^2.0.0
   animated_toggle_switch: ^0.7.0
+  persistent_bottom_nav_bar: ^5.0.2
 
 dev_dependencies:
   flutter_test:

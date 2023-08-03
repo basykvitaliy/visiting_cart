@@ -1,6 +1,8 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/screens/favorite/favorite_screen.dart';
@@ -19,57 +21,77 @@ class MenuScreen extends GetView<MenuMainController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => WillPopScope(
+    return  WillPopScope(
         onWillPop: controller.onWillPop,
-        child: Scaffold(
-          key: scaffoldKey,
-          resizeToAvoidBottomInset: false,
-          backgroundColor: AppTheme().colors!.mainBackground,
-          body: _buildScreens()[controller.selectedIndex.value],
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: AppTheme().colors!.secondColors,
-            child: Icon(Icons.camera_alt_outlined),
-            onPressed: () => Get.toNamed(Routes.scanScreen),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar: AnimatedBottomNavigationBar(
-            shadow: BoxShadow(
-              blurRadius: 7,
-              offset: -Offset(2, 2),
-              color: AppTheme().colors!.shadowOne,
-            ),
-            borderColor: AppColors.secondDarkThemeColor.withOpacity(0.3),
-            borderWidth: 3,
-            blurEffect: true,
-            activeColor: AppColors.whiteColor,
-            inactiveColor: AppTheme().colors!.secondColorsDisable,
-            activeIndex: controller.selectedIndex.value,
-            gapLocation: GapLocation.center,
-            notchSmoothness: NotchSmoothness.softEdge,
-            leftCornerRadius: 10,
-            rightCornerRadius: 10,
-            onTap: (index) async {
-              controller.selectedIndex.value = index;
-            },
-            backgroundColor: AppTheme().colors!.secondColors,
-            elevation: 0,
-            icons: iconList,
-          ),
-        )));
+      child: PersistentTabView(
+        context,
+        controller: controller.tabController,
+        screens: _buildScreens(),
+        items: _navBarsItems(context, controller),
+        confineInSafeArea: true,
+        backgroundColor: AppColors.secondColor,
+        handleAndroidBackButtonPress: true,
+        resizeToAvoidBottomInset: true,
+        stateManagement: true,
+        hideNavigationBarWhenKeyboardShows: true,
+
+        popAllScreensOnTapOfSelectedTab: false,
+        popActionScreens: PopActionScreensType.all,
+        itemAnimationProperties: const ItemAnimationProperties(
+          duration: Duration(milliseconds: 200),
+          curve: Curves.ease,
+        ),
+        screenTransitionAnimation: const ScreenTransitionAnimation(
+          animateTabTransition: true,
+          curve: Curves.ease,
+          duration: Duration(milliseconds: 200),
+        ),
+        navBarStyle: NavBarStyle.style12,
+      ));
   }
 }
-final iconList = <IconData>[
-  Icons.home,
-  Icons.favorite,
-  Icons.attach_money,
-  Icons.person,
-];
 
 List<Widget> _buildScreens() {
   return [
     HomeScreen(),
-    FavoriteScreen(),
     PayScreen(),
+    FavoriteScreen(),
     ProfileScreen(),
   ];
 }
+
+List<PersistentBottomNavBarItem> _navBarsItems(BuildContext context, MenuMainController controller) {
+  return [
+    PersistentBottomNavBarItem(
+        icon: const Icon(Icons.discount,),
+        title: ("homeTitle".tr),
+        activeColorPrimary: AppColors.whiteColor,
+        inactiveColorPrimary: AppColors.secondDisableColor,
+        iconSize: 22),
+    PersistentBottomNavBarItem(
+        icon: const Icon(Icons.quick_contacts_mail_rounded,),
+        title: ("cartTitle".tr),
+        activeColorPrimary: AppColors.whiteColor,
+        inactiveColorPrimary: AppColors.secondDisableColor,
+        iconSize: 22),
+    PersistentBottomNavBarItem(
+        icon: const Icon(Icons.favorite,),
+        title: ("otherTitle".tr),
+        activeColorPrimary: AppColors.whiteColor,
+        inactiveColorPrimary: AppColors.secondDisableColor,
+        iconSize: 22),
+    PersistentBottomNavBarItem(
+        icon: const Icon(Icons.person),
+        title: ("otherTitle".tr),
+        activeColorPrimary: AppColors.whiteColor,
+        inactiveColorPrimary: AppColors.secondDisableColor,
+        iconSize: 22),
+  ];
+}
+final iconList = <IconData>[
+  Icons.discount,
+  Icons.person_add_alt_rounded,
+  Icons.favorite,
+  Icons.person,
+];
+

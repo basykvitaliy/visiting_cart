@@ -15,7 +15,7 @@ class Messages extends Translations {
           "size": "Size",
           "cancel": "Cancel",
           "signIn": "Sign In",
-          "addDataManually": "Add data manually",
+          "addClubCard": "Add club card",
           "name": "Name",
           "companyName": "Company name",
           "cardName": "Card name",

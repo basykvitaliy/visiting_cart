@@ -5,7 +5,7 @@ import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/scan/scan_controller.dart';
 import 'package:visiting_card/widgets/scan_screen_widget.dart';
 
-import 'info_user_screen.dart';
+import 'info_card_screen.dart';
 
 class ScanScreen extends GetView<ScanController> {
   ScanScreen({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class ScanScreen extends GetView<ScanController> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme().colors!.secondColors,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Text('scanCard'.tr,
           style: AppStyles.boldWhiteHeading,
           textAlign: TextAlign.center,
@@ -26,8 +26,7 @@ class ScanScreen extends GetView<ScanController> {
         centerTitle: true,
       ),
       backgroundColor: AppTheme().colors!.mainBackground,
-      body: Obx(() =>
-          controller.barcodeMainValue.value == '' ? ScanSreenWidget(controller: controller) : InfoUserScreen(cardModel: CardModel(),)),
+      body: ScanSreenWidget(controller: controller),
     );
   }
 }

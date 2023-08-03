@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
@@ -12,6 +13,7 @@ import 'package:visiting_card/widgets/button_widget.dart';
 class MenuMainController extends GetxController with GetTickerProviderStateMixin {
   static MenuMainController get to => Get.find();
   RxInt selectedIndex = 0.obs;
+  PersistentTabController tabController = PersistentTabController(initialIndex: 0);
 
   Future<bool> onWillPop() async {
     return (await showDialog(

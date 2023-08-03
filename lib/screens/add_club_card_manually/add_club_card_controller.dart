@@ -11,12 +11,14 @@ import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/helpers/utils.dart';
+import 'package:visiting_card/model/logos/logos_model.dart';
 import 'package:visiting_card/model/my_card/address_model.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
+import 'package:visiting_card/services/firebase_services.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
-class EnterDataController extends GetxController with GetTickerProviderStateMixin {
-  static EnterDataController get to => Get.find();
+class AddClubCardController extends GetxController with GetTickerProviderStateMixin {
+  static AddClubCardController get to => Get.find();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
@@ -60,6 +62,10 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
     super.onInit();
   }
 
+  Future<List<LogosModel>> getLogos()async{
+   return await FirebaseServices().getLogos();
+  }
+
   Future<AuthStatus> saveNewPersonCard()async{
     addAddress();
     var card = CardModel();
@@ -92,6 +98,7 @@ class EnterDataController extends GetxController with GetTickerProviderStateMixi
         "${address.city.toString()}, "
         "${address.street.toString()}";
   }
+
   Future pickImage(ImageSource source) async {
     try {
       final image = await _picker.pickImage(source: source);
