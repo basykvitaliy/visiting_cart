@@ -2,6 +2,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/routes/routes.dart';
@@ -84,6 +85,15 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                 );
               }, childCount: controller.cardList.length))),
+          if (controller.bannerAd != null)
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: controller.bannerAd!.size.width.toDouble(),
+                height: controller.bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: controller.bannerAd!),
+              ),
+            ),
         ],
       ),
     );

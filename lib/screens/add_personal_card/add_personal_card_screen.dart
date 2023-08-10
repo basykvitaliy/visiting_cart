@@ -1,10 +1,9 @@
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
-import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
 
 import 'add_personal_card_controller.dart';

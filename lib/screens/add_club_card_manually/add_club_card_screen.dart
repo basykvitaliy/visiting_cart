@@ -1,5 +1,4 @@
-import 'package:animated_toggle_switch/animated_toggle_switch.dart';
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:visiting_card/helpers/app_colors.dart';

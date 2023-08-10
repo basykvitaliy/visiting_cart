@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/routes/app_pages.dart';
@@ -17,11 +18,15 @@ void main()async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  final initAd = MobileAds.instance.initialize();
+  final adState = AdState(initAd);
   await checkPermissions();
 
   /// Permission for visible image network.
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
+
+  await _initGoogleMobileAds();
 
   /// Set theme
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -33,6 +38,11 @@ void main()async {
   }
 
   runApp(const MyApp());
+}
+
+Future<InitializationStatus> _initGoogleMobileAds() {
+  // TODO: Initialize Google Mobile Ads SDK
+  return MobileAds.instance.initialize();
 }
 
 Future<void> checkPermissions() async {
