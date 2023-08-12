@@ -18,15 +18,13 @@ void main()async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  final initAd = MobileAds.instance.initialize();
-  final adState = AdState(initAd);
   await checkPermissions();
 
   /// Permission for visible image network.
   final context = SecurityContext.defaultContext;
   context.allowLegacyUnsafeRenegotiation = true;
 
-  await _initGoogleMobileAds();
+  MobileAds.instance.initialize();
 
   /// Set theme
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -38,11 +36,6 @@ void main()async {
   }
 
   runApp(const MyApp());
-}
-
-Future<InitializationStatus> _initGoogleMobileAds() {
-  // TODO: Initialize Google Mobile Ads SDK
-  return MobileAds.instance.initialize();
 }
 
 Future<void> checkPermissions() async {
@@ -67,7 +60,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MenuScreen(),
+      home: HomeScreen(),
     );
   }
 }
