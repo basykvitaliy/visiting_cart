@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
@@ -14,63 +15,22 @@ class FirebaseServices {
 
   String getUserId() => _auth.currentUser!.uid;
 
-  // Future<BuyersModel> getBuyer(String userId) async {
-  //   QuerySnapshot snapshot = await collectionBuyers.get();
-  //   var dat = snapshot.docs.firstWhere((element) => element.id == userId);
-  //
-  //   return BuyersModel(
-  //     nameUser: dat.data().toString().contains('full_name') ? dat.get('full_name') : '',
-  //     avatar: dat.data().toString().contains('full_name') ? dat.get('full_name') : '',
-  //   );
-  // }
-  //
-  // /// Stream for get cart from firebase.
-  // static Stream<List<BuyersModel>> streamGetBuyer() {
-  //   return FirebaseFirestore.instance
-  //       .collection('buyers')
-  //       .snapshots()
-  //       .map((QuerySnapshot query) {
-  //     List<BuyersModel> listNotifications = List<BuyersModel>.empty(growable: true);
-  //     for (var doc in query.docs) {
-  //       var model = BuyersModel(
-  //         nameUser: doc.data().toString().contains('full_name') ? doc.get('full_name') : '',
-  //         avatar: doc.data().toString().contains('full_name') ? doc.get('full_name') : '',
-  //       );
-  //       listNotifications.add(model);
-  //     }
-  //     return listNotifications.toList();
-  //   });
-  // }
+  /// Sign in with google.
+  Future<GoogleSignInAccount?> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  /// Write product to firebase.
-  // Future<LogosModel> getLogos() async {
-  //   try {
-  //     await collectionLogos.doc(uId).set(product).whenComplete(() {
-  //       _status = AuthStatus.successful;
-  //     });
-  //   } on FirebaseException catch (e, s) {
-  //     _status = AuthStatus.firebaseError;
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     _status = AuthStatus.error;
-  //   }
-  //   return _status;
-  // }
+    // Obtain the auth details from the request
+    //final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    //
+    // // Create a new credential
+    // final credential = GoogleAuthProvider.credential(
+    //   accessToken: googleAuth?.accessToken,
+    //   idToken: googleAuth?.idToken,
+    // );
 
-  /// Write defective product to firebase.
-  // Future<AuthStatus> writeDefectiveProduct(Map<String, dynamic> defectiveProduct, String uId) async {
-  //   try {
-  //     await collectionDefectiveProducts.doc(uId).set(defectiveProduct).whenComplete(() {
-  //       _status = AuthStatus.successful;
-  //     });
-  //   } on FirebaseException catch (e, s) {
-  //     _status = AuthStatus.firebaseError;
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     _status = AuthStatus.error;
-  //   }
-  //   return _status;
-  // }
+    return googleUser;
+  }
 
   /// Sign in account.
   Future<String?>? signIn(String email, String password) async {
@@ -114,74 +74,6 @@ class FirebaseServices {
     return listManagers;
   }
 
-  // /// Get shops.
-  // Future<ManagerModel> getManagerFromId(String id) async {
-  //   QueryDocumentSnapshot<Object?> managerModel;
-  //   var man;
-  //   try {
-  //     QuerySnapshot snapshot = await collectionManagers.get();
-  //     managerModel = snapshot.docs.firstWhere((element) => element.id == id);
-  //     man = ManagerModel.fromJson(managerModel.data() as Map<String, dynamic>);
-  //
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //   }
-  //   return man;
-  // }
-  //
-  // /// Write a new notifications to firebase.
-  // Future<String> createNewNotification(NotificationModel model) async {
-  //   String? id = '';
-  //   try {
-  //     await collectionNotifications.add(model.toJson()).then((value) {
-  //       id = value.id;
-  //     });
-  //   } on FirebaseAuthException catch (e, stack) {
-  //     print(e.message.toString());
-  //     return e.message.toString();
-  //   } catch (e) {
-  //     print(e.toString());
-  //     return e.toString();
-  //   }
-  //   return id!;
-  // }
-  //
-  // /// Stream for get cart from firebase.
-  // static Stream<List<NotificationModel>> streamGetNotifications() {
-  //   var id = Session.shopId;
-  //   return FirebaseFirestore.instance
-  //       .collection('notifications')
-  //       .where("shop_id", isEqualTo: id)
-  //       .where("type", isEqualTo: "buyer_need_help")
-  //       .orderBy('created_at', descending: true)
-  //       .snapshots()
-  //       .map((QuerySnapshot query) {
-  //     List<NotificationModel> listNotifications = List<NotificationModel>.empty(growable: true);
-  //     notificationId.value = query.docs.first.id;
-  //     for (var doc in query.docs) {
-  //       var model = NotificationModel(
-  //         type: doc.data().toString().contains('type') ? doc.get('type') : '',
-  //         shopId: doc.data().toString().contains("shop_id") ? doc.get("shop_id") : '',
-  //         userId: doc.data().toString().contains("user_id") ? doc.get("user_id") : '',
-  //         managerId: doc.data().toString().contains("manager_id") ? doc.get("manager_id") : '',
-  //         managerReadStatus:
-  //             doc.data().toString().contains("manager_read_status") ? doc.get("manager_read_status") : false,
-  //         adminReadStatus: doc.data().toString().contains("admin_read_status") ? doc.get("admin_read_status") : false,
-  //         createdAt: doc["created_at"],
-  //         updatedAt: doc["updated_at"],
-  //         data: DataNotificationModel(
-  //           location: doc["data"]["location"],
-  //           problem: doc["data"]["problem"],
-  //         ),
-  //       );
-  //       listNotifications.add(model);
-  //     }
-  //     return listNotifications.toList();
-  //   });
-  // }
-
   static String readTimestamp(int timestamp) {
     var now = DateTime.now();
     var format = DateFormat('HH:mm a');
@@ -210,100 +102,6 @@ class FirebaseServices {
 
     return time;
   }
-  //
-  // /// Update field manager_id from collection notification.
-  // Future<AuthStatus> updateNotification(NotificationModel model) async {
-  //   try {
-  //     var managerId = getUserId();
-  //
-  //     await collectionNotifications.doc(notificationId.value).set({
-  //       'manager_id': managerId,
-  //       //'user_id': model.userId,
-  //       'manager_read_status': true,
-  //     }, SetOptions(merge: true));
-  //     // await collectionNotifications.doc(notificationId.value).update(
-  //     //   {
-  //     //     'manager_id': managerId,
-  //     //     'user_id': model.userId,
-  //     //     'data': {
-  //     //       'location': model.data?.location,
-  //     //       'problem': model.data?.problem,
-  //     //     },
-  //     //     'manager_read_status': model.managerReadStatus,
-  //     //     'admin_read_status': false
-  //     //   },
-  //     // );
-  //     _status = AuthStatus.successful;
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //     _status = AuthStatus.firebaseError;
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //     _status = AuthStatus.error;
-  //   }
-  //   return _status;
-  // }
-  //
-  // /// Get notification from firebase firestore.
-  // Future<List<NotificationModel>> getNotifications() async {
-  //   List<NotificationModel> listNotifications = List<NotificationModel>.empty(growable: true);
-  //   try {
-  //     var id = Session.shopId;
-  //     QuerySnapshot snapshot = await collectionNotifications.where("shop_id", isEqualTo: id).get();
-  //
-  //     for (var doc in snapshot.docs) {
-  //       var model = NotificationModel(
-  //           type: doc['type'],
-  //           shopId: doc["shop_id"],
-  //           userId: doc["user_id"],
-  //           managerId: doc["manager_id"],
-  //           managerReadStatus: doc["manager_read_status"],
-  //           adminReadStatus: doc["admin_read_status"],
-  //           data: DataNotificationModel(
-  //             location: doc["data"]["location"],
-  //             problem: doc["data"]["problem"],
-  //           ));
-  //       if (model.type == 'buyer_need_help') listNotifications.add(model);
-  //     }
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //   }
-  //   return listNotifications.toList();
-  // }
-  //
-  // /// Get shops.
-  // Future<List<ShopModel>> getShops() async {
-  //   List<ShopModel> listShops = List<ShopModel>.empty(growable: true);
-  //   try {
-  //     QuerySnapshot snapshot = await collectionShops.get();
-  //     for (var shop in snapshot.docs) {
-  //       listShops.add(ShopModel.fromJson(shop.data() as Map<String, dynamic>));
-  //     }
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //   }
-  //   return listShops.toList();
-  // }
-
-  /// Get shops ids.
-  // Future<List<String>> getShopsId() async {
-  //   List<String> listShops = List<String>.empty(growable: true);
-  //   try {
-  //     QuerySnapshot snapshot = await collectionShops.get();
-  //     for (var shop in snapshot.docs) {
-  //       listShops.add(shop.id);
-  //     }
-  //   } on FirebaseException catch (e, s) {
-  //     print("ERROR FIREBASE CATCH: $e");
-  //   } catch (e) {
-  //     print("ERROR CATCH: $e");
-  //   }
-  //   return listShops.toList();
-  // }
 
   /// Update field last_activity from collection manager.
   Future<void> updateManager(String time) async {

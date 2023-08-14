@@ -2,8 +2,6 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:visiting_card/ad/ad_mob.dart';
-import 'package:visiting_card/ad/reusable_inline_example.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/routes/routes.dart';
@@ -24,6 +22,7 @@ class HomeScreen extends GetView<HomeController> {
     return Scaffold(
       backgroundColor: AppTheme().colors!.mainBackground,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.thirdColor,
         onPressed: () => Get.toNamed(Routes.enterDataManuallyScreen),
         child: Icon(Icons.add),
       ),
@@ -49,8 +48,8 @@ class HomeScreen extends GetView<HomeController> {
                   backgroundColor: AppTheme().colors!.secondColors,
                   actions: [
                     GestureDetector(
-                      onTap: () => Get.toNamed(Routes.settingsScreen),
-                      child: Container(margin: const EdgeInsets.only(right: 8), child: Icon(Icons.settings, color: AppColors.whiteColor)),
+                      onTap: () => Get.toNamed(Routes.profileScreen),
+                      child: Container(margin: const EdgeInsets.only(right: 8), child: Icon(Icons.person, color: AppColors.whiteColor)),
                     )
                   ],
                 ),
@@ -62,7 +61,7 @@ class HomeScreen extends GetView<HomeController> {
                           controller.getCardList();
                           Get.showSnackbar(GetSnackBar(
                             titleText: Text("success".tr, style: AppStyles.regularWhiteText16),
-                            messageText: Text("youBusinessCardIsDelete".tr, style: AppStyles.regularWhiteText16),
+                            messageText: Text("youCardIsDelete".tr, style: AppStyles.regularWhiteText16),
                             snackPosition: SnackPosition.TOP,
                             duration: const Duration(milliseconds: 1500),
                             backgroundColor: AppTheme().colors!.secondColors,

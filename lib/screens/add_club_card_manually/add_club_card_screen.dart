@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/routes/routes.dart';
@@ -41,7 +42,7 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                       onTap: () => Get.toNamed(Routes.addLogoScreen),
                       child: Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 100,
+                        height: MediaQuery.of(context).size.height / 5,
                         decoration: BoxDecoration(
                           border: Border.all(width: 1, color: AppColors.secondColor),
                           borderRadius: BorderRadius.circular(5)
@@ -63,10 +64,11 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                       validator: (value) {
                         if (!controller.isCardName(value!)) {
                           controller.isValidName.value = false;
+                          return 'Please enter a card name.';
                         } else {
                           controller.isValidName.value = true;
+                          return null;
                         }
-                        return null;
                       },
                       onChanged: (v) {
                         if (v.length >= 3) {
@@ -79,8 +81,13 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                           alignLabelWithHint: true,
                           labelText: "cardName".tr,
                           hintText: "cardName".tr,
+                          labelStyle: AppTheme().styles!.hintStyle14,
                           hintStyle: AppTheme().styles!.hintStyle16,
-                          border: const UnderlineInputBorder()),
+                          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          errorBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.errorColor))
+                      ),
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
@@ -90,10 +97,12 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                       validator: (value) {
                         if (!controller.isBarcode(value!)) {
                           controller.isValidName.value = false;
+                          return 'Please enter a barcode';
                         } else {
                           controller.isValidName.value = true;
+                          return null;
                         }
-                        return null;
+
                       },
                       onChanged: (v) {
                         if (v.length >= 5) {
@@ -106,9 +115,14 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                           alignLabelWithHint: true,
                           labelText: "barcode".tr,
                           hintText: "barcode".tr,
+                          labelStyle: AppTheme().styles!.hintStyle14,
                           hintStyle: AppTheme().styles!.hintStyle16,
-                          suffixIcon: InkWell(onTap: () => Get.toNamed(Routes.scanScreen), child: const Icon(Icons.qr_code_scanner)),
-                          border: const UnderlineInputBorder()),
+                          suffixIcon: InkWell(onTap: () => Get.toNamed(Routes.scanScreen), child: const Icon(Icons.qr_code_scanner, color: AppColors.secondDisableColor,)),
+                          enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.secondDisableColor)),
+                          errorBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 1, color: AppColors.errorColor))
+                      ),
                     ),
                   ],
                 ),
@@ -119,13 +133,15 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                       title: "save".tr.toUpperCase(),
                       isDisabledBtn: true,
                       onTap: () {
-                        controller.saveNewPersonCard().then((value) {
-                          if (value == AuthStatus.successful) {
-                            Get.back();
-                            Get.back();
-                            Get.forceAppUpdate();
-                          }
-                        });
+                        if(controller.formKey.currentState!.validate()){
+                          controller.saveNewPersonCard().then((value) {
+                            if (value == AuthStatus.successful) {
+                              controller.showInterstitialAd();
+                              Get.back();
+                              Get.forceAppUpdate();
+                            }
+                          });
+                        }
                       },
                     ),
                     const SizedBox(height: 8),

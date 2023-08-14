@@ -8,6 +8,8 @@ class Messages extends Translations {
           "start": "Start",
           "pause": "Pause",
           "email": "Email",
+          "error": "Error",
+          "success": "Success",
           "dateOfBirth": "Date of birth",
           "phoneNumber": "Phone number",
           "scanCard": "Scan the card",
@@ -30,6 +32,8 @@ class Messages extends Translations {
           "favorite": "Favorite",
           "personal": "Personal",
           "clubCard": "Club card",
+          "allFieldsMustBeFilled": "All fields must be filled",
+          "youCardIsDelete": "You card is delete",
         },
       };
 }

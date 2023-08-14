@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/helpers/constants.dart';
@@ -49,6 +51,15 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
   RxBool isSetType = false.obs;
   AddressModel address = AddressModel();
 
+  InterstitialAd? _interstitialAd;
+  int _numInterstitialLoadAttempts = 0;
+
+  static final AdRequest request = AdRequest(
+    keywords: <String>['foo', 'bar'],
+    contentUrl: 'http://foo.com/bar.html',
+    nonPersonalizedAds: true,
+  );
+
   @override
   void onInit()async {
     const imagePath = 'assets/images/bgcard.png';
@@ -59,6 +70,7 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
     await File(tempPath).writeAsBytes(byteData.buffer.asUint8List());
 
     image.value = File(tempPath);
+    _createInterstitialAd();
     super.onInit();
   }
 
@@ -99,65 +111,50 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
         "${address.street.toString()}";
   }
 
-  Future pickImage(ImageSource source) async {
-    try {
-      final image = await _picker.pickImage(source: source);
-      if (image == null) return;
-      isLoadImage.value = true;
-      final imageTemporary = File(image.path);
-      this.image.value = imageTemporary;
-      imageAvatarUrl = imageTemporary.path;
-      imageBytes = await image.readAsBytes();
-    } on PlatformException catch (e) {
-      print(e);
-    }
+  void _createInterstitialAd() {
+    InterstitialAd.load(
+        adUnitId: Platform.isAndroid
+            ? 'ca-app-pub-3940256099942544/1033173712'
+            : 'ca-app-pub-3940256099942544/4411468910',
+        request: request,
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (InterstitialAd ad) {
+            print('$ad loaded');
+            _interstitialAd = ad;
+            _numInterstitialLoadAttempts = 0;
+            _interstitialAd!.setImmersiveMode(true);
+          },
+          onAdFailedToLoad: (LoadAdError error) {
+            print('InterstitialAd failed to load: $error.');
+            _numInterstitialLoadAttempts += 1;
+            _interstitialAd = null;
+            if (_numInterstitialLoadAttempts < maxFailedLoadAttempts) {
+              _createInterstitialAd();
+            }
+          },
+        ));
   }
 
-  void getImage()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.containsKey("image")){
-      imageClubPath.value = sharedPreferences.getString("image")!;
-    }else{
-      imageClubPath.value = "";
+  void showInterstitialAd() {
+    if (_interstitialAd == null) {
+      print('Warning: attempt to show interstitial before loaded.');
+      return;
     }
-  }
-
-  Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
-    final source = await PickPhotoDialog.showPickPhotoDialog(
-        title: "uploadPhotos".tr,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 1.5);
-    if (source == ImageSource.camera) {
-      await pickImage(source!);
-    } else {
-      await pickImage(source!);
-    }
-    return null;
-  }
-
-  Future<void> cropSImage(File imageFile) async {
-    _croppedFile = await ImageCropper().cropImage(
-      sourcePath: imageFile.path,
-      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio3x2
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-      ],
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (InterstitialAd ad) =>
+          print('ad onAdShowedFullScreenContent.'),
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        print('$ad onAdDismissedFullScreenContent.');
+        ad.dispose();
+        _createInterstitialAd();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        print('$ad onAdFailedToShowFullScreenContent: $error');
+        ad.dispose();
+        _createInterstitialAd();
+      },
     );
-    isLoadImage.value = true;
-    image.value = File(_croppedFile!.path);
+    _interstitialAd!.show();
+    _interstitialAd = null;
   }
-
 }

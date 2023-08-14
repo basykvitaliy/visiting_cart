@@ -9,7 +9,7 @@ import 'package:visiting_card/screens/home/home_binding.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
 import 'package:visiting_card/screens/pay/pay_binding.dart';
 import 'package:visiting_card/screens/pay/pay_screen.dart';
-import 'package:visiting_card/screens/profile/edit_profile/edit_profile_screen.dart';
+import 'package:visiting_card/screens/profile/profile_screen.dart';
 import 'package:visiting_card/screens/scan/info_card_screen.dart';
 import 'package:visiting_card/screens/scan/scan_binding.dart';
 import 'package:visiting_card/screens/scan/scan_screen.dart';
@@ -52,12 +52,12 @@ class AppPages {
       binding: PayBinding(),
     ),
     GetPage(
-      name: Routes.editProfileScreen,
-      page: () => EditProfileScreen(),
-    ),
-    GetPage(
       name: Routes.addLogoScreen,
       page: () => AddLogoCardScreen(),
+    ),
+    GetPage(
+      name: Routes.profileScreen,
+      page: () => ProfileScreen(),
     ),
   ];
 }

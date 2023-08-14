@@ -24,7 +24,9 @@ class InfoCardScreen extends GetView<ScanController> {
         body:  Center(
           child: SizedBox(
             height: 150,
-            child: SfBarcodeGenerator(textStyle: AppStyles.regularHeading18,
+            child: SfBarcodeGenerator(
+              barColor: AppColors.whiteColor,
+              textStyle: AppStyles.regularWhiteHeading18,
               textSpacing: 5,
               value: cardModel.barcode.toString(),
               showValue: true,

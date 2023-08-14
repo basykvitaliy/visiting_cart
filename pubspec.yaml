@@ -71,6 +71,8 @@ dependencies:
   animations: ^2.0.0
   persistent_bottom_nav_bar: ^5.0.2
   google_mobile_ads: ^3.0.0
+  google_sign_in: ^5.4.1
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:

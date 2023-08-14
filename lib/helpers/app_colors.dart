@@ -24,12 +24,14 @@ class AppTheme extends GetxService {
 
 class AppColors {
 
-  static const Color mainColor = Color(0xfff4f8ff);
+  static const Color mainColor = Color(0xff31313f);
   static const Color mainDarkThemeColor = Color(0xff303030);
   static const Color secondDarkThemeColor = Color(0xff2F5A6A);
   static const Color secondDarkDisableColor = Color(0xff6783a1);
   static const Color mainTextColor = Color(0xff2E2727);
-  static const Color secondColor = Color(0xff69b0e7);
+  static const Color secondColor = Color(0xff445069);
+  static const Color thirdColor = Color(0xff5b9a8b);
+  static const Color fourthColor = Color(0xfff7e987);
   static const Color secondDisableColor = Color(0xffb5dcff);
   static const Color hintTextColor = Color(0xffadadad);
   static const Color shadowDarkThemeColor = Color(0xff4f4f4f);
@@ -85,6 +87,8 @@ class AppStyles {
   static const boldWhite26 = TextStyle(fontSize: 26, fontWeight: FontWeight.w600, color: Colors.white);
   static const boldWhite30 = TextStyle(fontSize: 30, fontWeight: FontWeight.w600, color: Colors.white);
 
+  static const regularText = TextStyle(fontSize: 8, fontWeight: FontWeight.w400, color: AppColors.secondDisableColor);
+
   static const regularBodyMainText = TextStyle(fontSize: 8, fontWeight: FontWeight.w400, color: AppColors.mainColor);
   static const regularMainText16 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.secondColor);
   static const regularMainHeading = TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: AppColors.secondColor);
@@ -124,8 +128,8 @@ class AppStyles {
         bold22 = textBold22.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
         bold30 = textBold30.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
         bold30second = textBold30.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondColor),
-        hintStyle14 = hint14.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.mainTextColor.withOpacity(0.4)),
-        hintStyle16 = hint16.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.mainTextColor.withOpacity(0.4)),
+        hintStyle14 = hint14.copyWith(color: AppColors.secondDisableColor ),
+        hintStyle16 = hint16.copyWith(color: AppColors.whiteColor),
         grayText16 = hint16.copyWith(color: isDarkTheme ? AppColors.hintTextColor : AppColors.shadowLightDarkThemeColor);
 
 

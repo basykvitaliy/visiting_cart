@@ -1,169 +1,108 @@
 
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
+import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/helpers/session.dart';
 import 'package:visiting_card/model/user/user_model.dart';
+import 'package:visiting_card/services/firebase_services.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
 class ProfileController extends GetxController{
   static ProfileController get to => Get.find();
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  Rx<bool> isValidEmail = true.obs;
-  Rx<bool> isValidName = true.obs;
-  Rx<bool> isValidPhone = true.obs;
-  bool isName(String input) => input.isNotEmpty;
-  bool isPhone(String input) => RegExp(r'(^(?:[+38])?[0-9]{10,12}$)', caseSensitive: false).hasMatch(input);
-  TextEditingController nameController = TextEditingController();
-  TextEditingController professionController = TextEditingController();
-  TextEditingController birthDayController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  RxString proffesional = ''.obs;
-
-  final ImagePicker _picker = ImagePicker();
-  Rx<File> image = File('').obs;
-  CroppedFile? _croppedFile;
-  RxBool isLoadImage = false.obs;
-  RxBool isShowEditButton = true.obs;
-  String? imageAvatarUrl = "";
-  RxString imageClubPath = ''.obs;
-  Uint8List? imageBytes;
-  RxInt idUser = 0.obs;
-  RxBool isLargeAnimation = false.obs;
-
-  DateTime _date = DateTime.now();
-  final DateFormat _dateFormat = DateFormat("MMM dd, yyyy");
+  BannerAd? bannerAd;
+  late final GoogleSignInAccount? googleUser;
+  bool? isBuyer;
 
   @override
-  void onInit()async {
-    const imagePath = 'assets/images/bg_card.png';
-    final byteData = await rootBundle.load(imagePath);
-
-    final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/bg_card.png';
-    await File(tempPath).writeAsBytes(byteData.buffer.asUint8List());
-
-    image.value = File(tempPath);
+  void onInit() {
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          bannerAd = ad as BannerAd;
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          ad.dispose();
+        },
+      ),
+    ).load();
     super.onInit();
   }
 
-  Future<UserModel>? getUser()async{
-    var user = await SqlDbRepository.instance.getUser();
-    nameController.text = user!.name.toString();
-    phoneController.text = user.phone.toString();
-    emailController.text = user.email.toString();
-    birthDayController.text = user.birthday.toString();
-    idUser.value = user.id!;
-    return user;
-  }
-
-  Future<void> deleteUser()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var key = sharedPreferences.getString("cardKey");
-    await SqlDbRepository.instance.deleteAllUser();
-    nameController.clear();
-    phoneController.clear();
-    emailController.clear();
-    birthDayController.clear();
-    isLoadImage.value = false;
-  }
-
-  Future<AuthStatus> saveNewUserToSql()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var user = UserModel();
-    user.name = nameController.text;
-    user.phone = phoneController.text;
-    user.email = emailController.text;
-    user.birthday = birthDayController.text;
-    user.photo = imageBytes;
-    user.qrcode = sharedPreferences.getString(Keys.qrCodeSvg);
-    return await SqlDbRepository.instance.insertUser(user);
-  }
-
-  /// Show calendar for select date birth.
-  void handleDatePicker(BuildContext context) async {
-    DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: _date,
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-    if (date != null && date != _date) {
-      _date = date;
-    }
-    birthDayController.text = _dateFormat.format(date!);
-  }
-
-  Future pickImage(ImageSource source) async {
+  Future<void> signInWithGoogle() async {
     try {
-      final image = await _picker.pickImage(source: source);
-      if (image == null) return;
-      isLoadImage.value = true;
-      final imageTemporary = File(image.path);
-      this.image.value = imageTemporary;
-      imageAvatarUrl = imageTemporary.path;
-      imageBytes = await image.readAsBytes();
-    } on PlatformException catch (e) {
-      print(e);
+      await FirebaseServices().signInWithGoogle().then((value) async {
+        googleUser = value;
+        //isBuyer = await FirebaseServices().verifyEmailByEmail(value!.email);
+      });
+
+      if (isBuyer != true) {
+
+        Get.showSnackbar(GetSnackBar(
+          titleText: Text("thereIsNoSuchUser".tr, style: AppTheme().styles!.hintStyle16,),
+          messageText: Text("youNeedToRegister".tr, style: AppTheme().styles!.hintStyle14,),
+          snackPosition: SnackPosition.TOP,
+          duration: const Duration(milliseconds: 1500),
+          backgroundColor: AppColors.mainColor,
+          borderRadius: LayoutConstants.snackBarRadius,
+        ));
+      } else {
+        final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential).then((v) async {
+
+          if (v.user != null) {
+            User? user = FirebaseAuth.instance.currentUser;
+            var token = await user!.getIdToken();
+            Session.authToken = token;
+          }
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "provider-already-linked":
+          print("The provider has already been linked to the user.");
+          break;
+        case "invalid-credential":
+          print("The provider's credential is not valid.");
+          break;
+        case "credential-already-in-use":
+          print("The account corresponding to the credential already exists, "
+              "or is already linked to a Firebase User.");
+          break;
+      // See the API reference for the full list of error codes.
+        default:
+          print("Unknown error.");
+      }
     }
   }
 
-  void getImage()async{
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.containsKey("image")){
-      imageClubPath.value = sharedPreferences.getString("image")!;
-    }else{
-      imageClubPath.value = "";
-    }
-  }
-
-  Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
-    final source = await PickPhotoDialog.showPickPhotoDialog(
-        title: "uploadPhotos".tr,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height / 1.5);
-    if (source == ImageSource.camera) {
-      await pickImage(source!);
-    } else {
-      await pickImage(source!);
-    }
-    return null;
-  }
-
-  Future<void> cropSImage(File imageFile) async {
-    _croppedFile = await ImageCropper().cropImage(
-      sourcePath: imageFile.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio3x2
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-      ],
-    );
-    isLoadImage.value = true;
-    image.value = File(_croppedFile!.path);
+  @override
+  void dispose() {
+    bannerAd?.dispose();
+    super.dispose();
   }
 
 }
