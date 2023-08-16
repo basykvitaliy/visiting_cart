@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
 import 'package:visiting_card/screens/add_club_card_manually/add_club_card_controller.dart';
 
@@ -19,15 +20,7 @@ class AddLogoCardScreen extends GetView<AddClubCardController> {
             style: AppStyles.boldWhiteHeading,
           ),
           centerTitle: true,
-          leading: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: SvgPicture.asset(
-                  "assets/svg/arrow_back.svg",
-                  color: AppTheme().isLightTheme ? AppColors.mainTextColor : AppColors.whiteColor,
-                )),
-          ),
+          automaticallyImplyLeading: true,
           elevation: 0,
           backgroundColor: AppTheme().colors!.secondColors,
         ),
@@ -52,12 +45,16 @@ class AddLogoCardScreen extends GetView<AddClubCardController> {
                       width: MediaQuery.of(context).size.width,
                       height: 150,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: AppColors.secondColor)
+                        border: Border.all(width: 1, color: AppColors.secondColor),
+                        color: convertHexToColor(logosList[index].backgroundColor.toString()),
                       ),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Text(logosList[index].title.toString()),
+                          SizedBox(
+                            width: 200,
+                              child: Image.network(logosList[index].image.toString(), )),
+
                         ],
                       ),
                     ),

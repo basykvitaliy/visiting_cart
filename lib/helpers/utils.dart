@@ -140,3 +140,8 @@ extension BoolParsing on String {
     return toLowerCase() == 'true';
   }
 }
+
+Color convertHexToColor(String hexColor) {
+  String convertedColor = "0xff${hexColor.substring(0, hexColor.length - 2)}";
+  return Color(int.parse(convertedColor));
+}

@@ -38,7 +38,7 @@ class AppColors {
   static const Color shadowLightDarkThemeColor = Color(0xff777777);
   static const Color errorColor = Color(0xffb64949);
   static const Color whiteColor = Color(0xffffffff);
-  static const Color disabledButton = Color(0xff788a73);
+  static const Color disabledButton = Color(0xFFB74093);
 
   final Color mainBackground;
   final Color textColors;
