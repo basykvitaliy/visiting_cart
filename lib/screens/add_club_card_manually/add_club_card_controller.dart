@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -71,7 +70,7 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
     var card = CardModel();
     card.cardName = cardNameController.text;
     card.barcode = barcodeController.text;
-    card.photo = imageBytes;
+    card.photo = await FirebaseServices().downloadAndSaveImage(logo.value);
     card.date = getDateTimeNow();
     card.backgroundColor = backgroundColor.value;
     return await SqlDbRepository.instance.insertCard(card);

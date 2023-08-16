@@ -55,7 +55,6 @@ class ProfileController extends GetxController{
       });
 
       if (isBuyer != true) {
-
         Get.showSnackbar(GetSnackBar(
           titleText: Text("thereIsNoSuchUser".tr, style: AppTheme().styles!.hintStyle16,),
           messageText: Text("youNeedToRegister".tr, style: AppTheme().styles!.hintStyle14,),

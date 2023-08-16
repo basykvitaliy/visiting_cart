@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_barcodes/barcodes.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/scan/scan_controller.dart';
 
@@ -17,7 +18,7 @@ class InfoCardScreen extends GetView<ScanController> {
         appBar: AppBar(
           title: Text(cardModel.cardName.toString()),
           centerTitle: true,
-          backgroundColor: Color(int.parse(cardModel.backgroundColor!, radix: 16)),
+          backgroundColor: convertHexToColor(cardModel.backgroundColor.toString()),
           automaticallyImplyLeading: true,
         ),
         backgroundColor: AppColors.mainColor,
