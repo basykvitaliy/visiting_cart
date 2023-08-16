@@ -3,8 +3,6 @@ import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/screens/add_club_card_manually/add_club_card_screen.dart';
 import 'package:visiting_card/screens/add_club_card_manually/add_logo_screen/add_logo_card_screen.dart';
-import 'package:visiting_card/screens/favorite/favorite_binding.dart';
-import 'package:visiting_card/screens/favorite/favorite_screen.dart';
 import 'package:visiting_card/screens/home/home_binding.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
 import 'package:visiting_card/screens/pay/pay_binding.dart';
@@ -27,11 +25,6 @@ class AppPages {
       name: Routes.scanScreen,
       page: () => ScanScreen(),
       binding: ScanBinding(),
-    ),
-    GetPage(
-      name: Routes.favoriteScreen,
-      page: () => FavoriteScreen(),
-      binding: FavoriteBinding(),
     ),
     GetPage(
       name: Routes.infoScreen,

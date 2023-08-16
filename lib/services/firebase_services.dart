@@ -44,20 +44,6 @@ class FirebaseServices {
     }
   }
 
-  void signOut() {
-    _auth.signOut().whenComplete(() {
-
-    });
-  }
-
-  Future<AuthStatus> resetPassword({required String email}) async {
-    await _auth
-        .sendPasswordResetEmail(email: email)
-        .then((v) => _status = AuthStatus.successful)
-        .catchError((e) => _status = AuthExceptionHandler.handleAuthException(e));
-    return _status;
-  }
-
   /// Get managers from firebase firestore.
   Future<List<LogosModel>> getLogos() async {
     List<LogosModel> listManagers = List<LogosModel>.empty(growable: true);

@@ -8,7 +8,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/routes/app_pages.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
-import 'package:visiting_card/screens/menu/menu_screen.dart';
 import 'package:visiting_card/translation/Messages.dart';
 
 import 'helpers/app_colors.dart';

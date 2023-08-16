@@ -96,8 +96,6 @@ class SqlDbRepository {
     final List<CardModel> cardsList = [];
 
     for (var element in userCardsMapList) {
-
-
       // Отримання байтів фотографії з колонки photo
       Uint8List? photoBytes = element[colCardPhoto] as Uint8List?;
 
@@ -116,93 +114,6 @@ class SqlDbRepository {
     return cardsList;
   }
 
-  // Future<List<PersonalCardModel>> getPersonalCards() async {
-  //   Database db = await this.db;
-  //   final List<Map<String, dynamic>> personalCardsMapList = await db.query(personalCardTable);
-  //   final List<PersonalCardModel> cardsList = [];
-  //
-  //   for (var element in personalCardsMapList) {
-  //     Uint8List? photoBytes = element[colPersonalCardPhoto] as Uint8List?;
-  //     PersonalCardModel card = PersonalCardModel(
-  //         id: element[colCardId],
-  //         name: element[colPersonalCardName],
-  //         profession: element[colPersonalCardProfession],
-  //         phone: element[colPersonalCardPhone],
-  //         email: element[colPersonalCardEmail],
-  //         photo: photoBytes,
-  //         barcode: element[colPersonalCardBarcode],
-  //         qrcode: element[colPersonalCardQrCode],
-  //     );
-  //     cardsList.add(card);
-  //   }
-  //
-  //   return cardsList;
-  // }
-  //
-  // Future<List<ClubCardModel>> getClubCards() async {
-  //   Database db = await this.db;
-  //   final List<Map<String, dynamic>> clubCardsMapList = await db.query(clubCardTable);
-  //   final List<ClubCardModel> cardsList = [];
-  //   for (var element in clubCardsMapList) {
-  //     var card = ClubCardModel.fromJson(element);
-  //     // ClubCardModel card = ClubCardModel(
-  //     //   id: element[colClubCardId],
-  //     //   title: element[colClubCardTitle],
-  //     //   code: element[colClubCardCode],
-  //     //   color: element[colClubCardColor],
-  //     //   photo: element[colClubCardPhoto],
-  //     // );
-  //     cardsList.add(card);
-  //   }
-  //   return cardsList;
-  // }
-  //
-  // Future<AuthStatus> insertClubCard(ClubCardModel cardModel) async {
-  //   Database db = await this.db;
-  //   final result = await db.insert(clubCardTable, cardModel.toJson());
-  //
-  //   if(result != null){
-  //     _status = AuthStatus.successful;
-  //   }else{
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Save club card");
-  //   return _status!;
-  // }
-  //
-  // Future<AuthStatus> updateClubCard(ClubCardModel card) async {
-  //   Database db = await this.db;
-  //   Map<String, dynamic> cardJson = card.toJson();
-  //
-  //   final result = await db.update(
-  //     clubCardTable,
-  //     cardJson,
-  //     where: '$colClubCardId = ?',
-  //     whereArgs: [card.id],
-  //   );
-  //   if (result != 0) {
-  //     card.isFavorite = cardJson['isFavorite'];
-  //     _status = AuthStatus.successful;
-  //   } else {
-  //     _status = AuthStatus.error;
-  //   }
-  //
-  //   print("Update ");
-  //   return _status!;
-  // }
-  //
-  // Future<AuthStatus> insertPersonalCard(PersonalCardModel cardModel) async {
-  //   Database db = await this.db;
-  //   final result = await db.insert(personalCardTable, cardModel.toJson());
-  //   if(result != null){
-  //     _status = AuthStatus.successful;
-  //   }else{
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Save personal card");
-  //   return _status!;
-  // }
-  //
 
   Future<AuthStatus> insertUser(UserModel userModel) async {
     Database db = await this.db;
