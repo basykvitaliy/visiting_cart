@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
+import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
 
@@ -45,10 +46,11 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
                         height: MediaQuery.of(context).size.height / 5,
                         decoration: BoxDecoration(
                           border: Border.all(width: 1, color: AppColors.secondColor),
-                          borderRadius: BorderRadius.circular(5)
+                          borderRadius: BorderRadius.circular(5),
+                          color: controller.isLoadImage.value ? convertHexToColor(controller.backgroundColor.toString()) : null,
                         ),
                         child: controller.isLoadImage.value
-                            ? Image.file(controller.image.value, fit: BoxFit.cover)
+                            ? SizedBox(width: 150, child: Image.network(controller.logo.value))
                             : Icon(
                           Icons.camera_alt,
                           size: 40,

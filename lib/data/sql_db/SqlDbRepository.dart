@@ -32,20 +32,11 @@ class SqlDbRepository {
   /// Visitka model.
     String myCardTable = "my_card_table";
     String colCardId = "id";
-    String colType = "type";
-    String colNameUser = "nameUser";
-    String colCompanyName = "companyName";
     String colCardName = "cardName";
     String colBarcode = "barcode";
-    String colProfession = "profession";
-    String colCardPhone = "phone";
-    String colEMail = "email";
     String colDate = "date";
-    String colAddress = "address";
-    String colLogo = "logo";
     String colBackgroundColor = "backgroundColor";
     String colCardPhoto = "photo";
-    String colFavorite = "isFavorite";
     /// Visitka model.
 
 
@@ -75,22 +66,12 @@ class SqlDbRepository {
 
     await db.execute("CREATE TABLE $myCardTable("
         "$colCardId INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "$colType INTEGER, "
-        "$colNameUser TEXT, "
-        "$colCompanyName TEXT, "
         "$colCardName TEXT, "
         "$colBarcode TEXT, "
-        "$colProfession TEXT, "
-        "$colPhone TEXT, "
-        "$colEMail TEXT, "
-        "$colAddress TEXT, "
         "$colDate TEXT, "
-        "$colLogo TEXT, "
         "$colBackgroundColor TEXT,"
-        "$colCardPhoto TEXT,"
-        "$colFavorite INTEGER) "
+        "$colCardPhoto TEXT) "
     );
-
   }
 
   Future<UserModel?> getUser() async {
@@ -115,30 +96,18 @@ class SqlDbRepository {
     final List<CardModel> cardsList = [];
 
     for (var element in userCardsMapList) {
-      // Розпакування значення colAddress
-      String addressString = element[colAddress];
-      Map<String, dynamic> addressJson = jsonDecode(addressString);
-      AddressModel address = AddressModel.fromJson(addressJson);
+
 
       // Отримання байтів фотографії з колонки photo
       Uint8List? photoBytes = element[colCardPhoto] as Uint8List?;
 
       CardModel card = CardModel(
         id: element[colCardId],
-        address: address,
-        type: element[colType],
-        nameUser: element[colNameUser],
-        companyName: element[colCompanyName],
         cardName: element[colCardName],
         barcode: element[colBarcode],
         date: element[colDate],
-        profession: element[colProfession],
-        phone: element[colPhone],
-        email: element[colEMail],
-        logo: element[colLogo],
         backgroundColor: element[colBackgroundColor],
         photo: photoBytes,
-          isFavorite: element[colFavorite]
       );
 
       cardsList.add(card);
@@ -250,7 +219,6 @@ class SqlDbRepository {
   Future<AuthStatus> insertCard(CardModel card) async {
     Database db = await this.db;
     Map<String, dynamic> cardJson = card.toJson();
-    cardJson[colAddress] = jsonEncode(cardJson[colAddress]);
 
     final result = await db.insert(myCardTable, cardJson);
     if(result != null){

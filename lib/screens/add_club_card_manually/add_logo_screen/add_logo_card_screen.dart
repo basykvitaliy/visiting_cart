@@ -38,6 +38,9 @@ class AddLogoCardScreen extends GetView<AddClubCardController> {
                   return GestureDetector(
                     onTap: (){
                       controller.cardNameController.text = logosList[index].title.toString();
+                      controller.backgroundColor.value = logosList[index].backgroundColor.toString();
+                      controller.logo.value = logosList[index].image.toString();
+                      controller.isLoadImage.value = true;
                       Get.back();
                     },
                     child: Container(
@@ -45,7 +48,7 @@ class AddLogoCardScreen extends GetView<AddClubCardController> {
                       width: MediaQuery.of(context).size.width,
                       height: 150,
                       decoration: BoxDecoration(
-                        border: Border.all(width: 1, color: AppColors.secondColor),
+                        borderRadius: BorderRadius.circular(10),
                         color: convertHexToColor(logosList[index].backgroundColor.toString()),
                       ),
                       child: Stack(
