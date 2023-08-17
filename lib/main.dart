@@ -17,7 +17,7 @@ void main()async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await checkPermissions();
+  //await checkPermissions();
 
   /// Permission for visible image network.
   final context = SecurityContext.defaultContext;
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Visiting Card',
       getPages: AppPages.pages,
       translations: Messages(),

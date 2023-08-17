@@ -44,6 +44,10 @@ class FirebaseServices {
     }
   }
 
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
   /// Get managers from firebase firestore.
   Future<List<LogosModel>> getLogos() async {
     List<LogosModel> listManagers = List<LogosModel>.empty(growable: true);

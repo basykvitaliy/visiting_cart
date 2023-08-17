@@ -18,18 +18,19 @@ import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/helpers/session.dart';
 import 'package:visiting_card/model/user/user_model.dart';
+import 'package:visiting_card/screens/base_controller.dart';
 import 'package:visiting_card/services/firebase_services.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
-class ProfileController extends GetxController{
+class ProfileController extends BaseController{
   static ProfileController get to => Get.find();
 
   BannerAd? bannerAd;
   late final GoogleSignInAccount? googleUser;
-  bool? isBuyer;
+
 
   @override
-  void onInit() {
+  void onInit()async {
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       request: const AdRequest(),
@@ -44,18 +45,26 @@ class ProfileController extends GetxController{
         },
       ),
     ).load();
+    await getUser();
     super.onInit();
+  }
+
+  Future<void> saveUser(UserModel userModel)async{
+    await SqlDbRepository.instance.insertUser(userModel);
+  }
+
+  Future<void> deleteUser(UserModel userModel)async{
+    await SqlDbRepository.instance.deleteUser(userModel);
   }
 
   Future<void> signInWithGoogle() async {
     try {
       await FirebaseServices().signInWithGoogle().then((value) async {
         googleUser = value;
-        //isBuyer = await FirebaseServices().verifyEmailByEmail(value!.email);
+        isBuyer.value = value!.email.isNotEmpty ? true : false;
       });
 
       if (isBuyer != true) {
-
         Get.showSnackbar(GetSnackBar(
           titleText: Text("thereIsNoSuchUser".tr, style: AppTheme().styles!.hintStyle16,),
           messageText: Text("youNeedToRegister".tr, style: AppTheme().styles!.hintStyle14,),
@@ -72,7 +81,12 @@ class ProfileController extends GetxController{
         );
 
         await FirebaseAuth.instance.signInWithCredential(credential).then((v) async {
-
+          var u = UserModel(
+              name: googleUser?.displayName,
+              photo: googleUser?.photoUrl,
+              email: googleUser?.email
+          );
+          await saveUser(u).whenComplete(() => getUser());
           if (v.user != null) {
             User? user = FirebaseAuth.instance.currentUser;
             var token = await user!.getIdToken();

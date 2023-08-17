@@ -4,8 +4,9 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
+import 'package:visiting_card/screens/base_controller.dart';
 
-class HomeController extends GetxController with GetTickerProviderStateMixin {
+class HomeController extends BaseController {
   static HomeController get to => Get.find();
   FocusNode focusNode = FocusNode();
   TextEditingController searchController = TextEditingController(text: "Search");
@@ -15,11 +16,6 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   RxList<CardModel> cardList = RxList<CardModel>();
 
   BannerAd? bannerAd;
-
-
-  Future<List<dynamic>> search(String query)async{
-    return [];
-  }
 
   Future<List<CardModel>> getCardList()async{
     cardList.value = await SqlDbRepository.instance.getUserCards();
@@ -31,7 +27,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
   }
 
   @override
-  void onInit() {
+  void onInit() async{
     BannerAd(
       adUnitId: AdHelper.bannerAdUnitId,
       request: const AdRequest(),
@@ -46,6 +42,7 @@ class HomeController extends GetxController with GetTickerProviderStateMixin {
         },
       ),
     ).load();
+    await getUser();
     super.onInit();
   }
 

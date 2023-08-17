@@ -8,6 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/routes/routes.dart';
 import 'package:visiting_card/screens/profile/profile_controller.dart';
+import 'package:visiting_card/services/firebase_services.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
   ProfileScreen({Key? key}) : super(key: key);
@@ -24,38 +25,60 @@ class ProfileScreen extends GetView<ProfileController> {
             style: AppStyles.boldWhiteHeading,
           ),
           centerTitle: true,
-          automaticallyImplyLeading: false,
+          automaticallyImplyLeading: true,
           backgroundColor: AppTheme().colors!.secondColors,
+          actions: [
+            IconButton(onPressed: () => FirebaseServices().signOut().whenComplete(() {
+              controller.isBuyer.value = false;
+              controller.deleteUser(controller.user.value);
+            }), icon: Icon(Icons.exit_to_app))
+          ],
         ),
         backgroundColor: AppTheme().colors!.mainBackground,
         body: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           margin: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const SizedBox(),
-              SignInButton(
-                Buttons.Google,
-                text: "Sign up with Google",
-                onPressed: () => controller.signInWithGoogle(),
-              ),
-              SizedBox(
-                height: 50,
-                child: controller.bannerAd != null
-                    ? Align(
-                        alignment: Alignment.center,
-                        child: Container(
-                          width: controller.bannerAd!.size.width.toDouble(),
-                          height: controller.bannerAd!.size.height.toDouble(),
-                          child: AdWidget(ad: controller.bannerAd!),
-                        ),
+          child: Obx(() => Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(),
+                  controller.isBuyer.value
+                      ? Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: CircleAvatar(
+                              radius: 40,
+                              child: Image.network(controller.user.value.photo.toString()),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(controller.user.value.name.toString(), style: AppStyles.regularWhiteHeading18,),
+                          const SizedBox(height: 16),
+                          Text(controller.user.value.email.toString(), style: AppStyles.regularWhiteHeading18,)
+                        ],
                       )
-                    : Container(),
-              ),
-            ],
-          ),
+                      : SignInButton(
+                          Buttons.Google,
+                          text: "Sign up with Google",
+                          onPressed: () => controller.signInWithGoogle(),
+                        ),
+                  SizedBox(
+                    height: 50,
+                    child: controller.bannerAd != null
+                        ? Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: controller.bannerAd!.size.width.toDouble(),
+                              height: controller.bannerAd!.size.height.toDouble(),
+                              child: AdWidget(ad: controller.bannerAd!),
+                            ),
+                          )
+                        : Container(),
+                  ),
+                ],
+              )),
         ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/routes/routes.dart';
+import 'package:visiting_card/screens/profile/profile_controller.dart';
 import 'package:visiting_card/screens/scan/info_card_screen.dart';
 import 'package:visiting_card/widgets/card_widget.dart';
 
@@ -48,9 +49,14 @@ class HomeScreen extends GetView<HomeController> {
                   backgroundColor: AppTheme().colors!.secondColors,
                   actions: [
                     GestureDetector(
-                      onTap: () => Get.toNamed(Routes.profileScreen),
-                      child: Container(margin: const EdgeInsets.only(right: 8), child: Icon(Icons.person, color: AppColors.whiteColor)),
-                    )
+                          onTap: () => Get.toNamed(Routes.profileScreen),
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            child:Obx(() => controller.isBuyer.value
+                                ? Image.network(controller.user.value.photo.toString(), scale: 3,)
+                                : const Icon(Icons.person, color: AppColors.whiteColor),
+                          ),
+                        ))
                   ],
                 ),
                 Obx(() => SliverList(

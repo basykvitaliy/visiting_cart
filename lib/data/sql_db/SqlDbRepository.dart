@@ -21,11 +21,8 @@ class SqlDbRepository {
   String userTable = "user_table";
   String colId = "id";
   String colName = "name";
-  String colBirthday = "birthday";
-  String colPhone = "phone";
   String colEmail = "email";
   String colPhoto = "photo";
-  String colQrCode = "qrcode";
   /// User model.
 
 
@@ -57,11 +54,8 @@ class SqlDbRepository {
     await db.execute("CREATE TABLE $userTable("
         "$colId INTEGER PRIMARY KEY AUTOINCREMENT, "
         "$colName TEXT, "
-        "$colBirthday TEXT, "
-        "$colPhone TEXT, "
         "$colEmail TEXT, "
-        "$colPhoto TEXT, "
-        "$colQrCode TEXT) "
+        "$colPhoto TEXT) "
     );
 
     await db.execute("CREATE TABLE $myCardTable("
@@ -77,13 +71,8 @@ class SqlDbRepository {
   Future<UserModel?> getUser() async {
     Database db = await this.db;
     final List<Map<String, Object?>> userModelMap = await db.query(userTable);
-
     if (userModelMap.isNotEmpty) {
       UserModel userModel = UserModel.fromJson(userModelMap.last);
-
-      Uint8List? photoBytes = userModelMap.last[colPhoto] as Uint8List?;
-      userModel.photo = photoBytes;
-
       return userModel;
     } else {
       return null;
@@ -141,59 +130,10 @@ class SqlDbRepository {
     return _status!;
   }
 
-  // Future<AuthStatus> updatePersonalCard(PersonalCardModel card) async {
-  //   Database db = await this.db;
-  //   Map<String, dynamic> cardJson = card.toJson();
-  //
-  //   final result = await db.update(
-  //     personalCardTable,
-  //     cardJson,
-  //     where: '$colPersonalCardPhone = ?',
-  //     whereArgs: [card.phone],
-  //   );
-  //
-  //   if (result != 0) {
-  //     _status = AuthStatus.successful;
-  //   } else {
-  //     _status = AuthStatus.error;
-  //   }
-  //   print("Update ");
-  //   return _status!;
-  // }
-  //
-  // Future<AuthStatus> updateCard(MyCardModel card) async {
-  //   Database db = await this.db;
-  //   Map<String, dynamic> cardJson = card.toJson();
-  //   cardJson[colAddress] = jsonEncode(cardJson[colAddress]);
-  //   cardJson[colWorkDay] = jsonEncode(cardJson[colWorkDay]);
-  //   cardJson[colSocialNetworks] = jsonEncode(cardJson[colSocialNetworks]);
-  //
-  //   final result = await db.update(
-  //     myCardTable,
-  //     cardJson,
-  //     where: '$colCardId = ?',
-  //     whereArgs: [card.id],
-  //   );
-  //
-  //   if (result != 0) {
-  //     // Оновити поля об'єкта MyCardModel після виконання оновлення в базі даних
-  //     card.isFavorite = cardJson['isFavorite'];
-  //     // Оновити інші поля, які вам потрібно оновити
-  //
-  //     _status = AuthStatus.successful;
-  //   } else {
-  //     _status = AuthStatus.error;
-  //   }
-  //
-  //   print("Update ");
-  //   return _status!;
-  // }
-  //
-  Future<AuthStatus> updateUser(UserModel user) async {
+  Future<AuthStatus> deleteUser(UserModel user) async {
     Database db = await this.db;
-    final result = await db.update(
+    final result = await db.delete(
       userTable,
-      user.toJson(),
       where: "$colId = ?",
       whereArgs: [user.id],
     );

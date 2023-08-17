@@ -6,6 +6,8 @@ import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/routes/routes.dart';
+import 'package:visiting_card/screens/scan/scan_controller.dart';
+import 'package:visiting_card/screens/scan/scan_screen.dart';
 import 'package:visiting_card/widgets/button_widget.dart';
 
 import 'add_club_card_controller.dart';
@@ -18,6 +20,8 @@ class AddClubCardScreen extends GetView<AddClubCardController> {
 
   @override
   Widget build(BuildContext context) {
+
+    //controller.barcodeController.text = ScanController.to.resultBarcode ?? '';
     return Scaffold(
       appBar: AppBar(
         title: Text(

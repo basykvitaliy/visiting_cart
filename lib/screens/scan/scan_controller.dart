@@ -8,28 +8,15 @@ import 'package:visiting_card/helpers/app_colors.dart';
 class ScanController extends GetxController {
   static ScanController get to => Get.find();
 
-  RxBool isPause = true.obs;
   RxBool isFlash = false.obs;
-  RxBool isFlipCamera = false.obs;
-
   RxString barcodeMainValue = "".obs;
-
   void toggleIsFlash() => isFlash.toggle();
-
-  void toggleIsPause() => isPause.toggle();
 
   Barcode? barcodeResult;
   late QRViewController controllerQr;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   RxString title = "".obs;
-  RxInt price = 0.obs;
-  String? article;
-  ValueNotifier<dynamic> result = ValueNotifier(null);
-  RxString serialNumberChip = "".obs;
-  String resultBarcode = '';
-  RxBool isLargeAnim = false.obs;
-  
 
   Widget buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
@@ -50,13 +37,15 @@ class ScanController extends GetxController {
   }
 
   void _onQRViewCreated(QRViewController qController) {
-
     controllerQr = qController;
     controllerQr.resumeCamera();
     qController.scannedDataStream.listen((scanData) {
-      barcodeResult = scanData;
-      barcodeMainValue.value = barcodeResult!.code!;
-
+      if(scanData.code!.isNotEmpty){
+        barcodeResult = scanData;
+        barcodeMainValue.value = barcodeResult!.code!;
+        print(barcodeMainValue.value);
+        Get.back(result: barcodeMainValue.value);
+      }
     });
   }
 

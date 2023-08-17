@@ -119,7 +119,7 @@ class AppStyles {
         textStyle14mainColor = headline1BaseStyle14.copyWith(color: isDarkTheme ? AppColors.secondDarkThemeColor : AppColors.secondColor),
         textStyle16mainColor = headline1BaseStyle16.copyWith(color: isDarkTheme ? AppColors.secondDarkThemeColor : AppColors.secondColor),
         textStyle14WhiteColor = headline1BaseStyle14.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
-        textStyle16WhiteColor = whiteColor16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
+        textStyle16WhiteColor = whiteColor16.copyWith(color: AppColors.whiteColor),
         textStyle20WhiteColor = whiteColor20.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondDarkThemeColor),
         greenWhiteText16 = whiteColor16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.secondColor),
         regular16 = headline1BaseStyle16.copyWith(color: isDarkTheme ? AppColors.whiteColor : AppColors.mainTextColor),
