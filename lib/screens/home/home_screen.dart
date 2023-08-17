@@ -89,7 +89,6 @@ class HomeScreen extends GetView<HomeController> {
                           transitionDuration: const Duration(milliseconds: 700),
                           closedBuilder: (BuildContext context, VoidCallback openContainer) {
                             return CardWidget(
-                              favorite: () => controller.toggleFavorite(),
                               model: controller.cardList[index],
                             );
                           },

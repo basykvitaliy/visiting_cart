@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart' as d;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -100,6 +103,26 @@ class FirebaseServices {
         .update({'last_activity': time})
         .then((_) => print('Updated'))
         .catchError((error) => print('Update failed: $error'));
+  }
+
+
+  Future<Uint8List> downloadAndSaveImage(String imageUrl) async {
+    final d.Dio dio = d.Dio();
+    Uint8List? imageBytes;
+    try {
+      final d.Response<Uint8List> response = await dio.get<Uint8List>(
+        imageUrl,
+        options: d.Options(responseType: d.ResponseType.bytes),
+      );
+      if (response.statusCode == 200) {
+        imageBytes = response.data!;
+      } else {
+        throw Exception('Failed to download image');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+    return imageBytes!;
   }
 }
 

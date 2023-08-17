@@ -2,23 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 
 class CardWidget extends StatelessWidget {
   const CardWidget({
     super.key,
     required this.model,
-    required this.favorite,
   });
 
   final CardModel model;
-  final Callback favorite;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Color(int.parse(model.backgroundColor!, radix: 16)),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      color: convertHexToColor(model.backgroundColor.toString()),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(7),
       ),
@@ -33,7 +32,6 @@ class CardWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
                 Text(
                   model.date.toString(),
                   style: AppStyles.regularText,
@@ -41,11 +39,14 @@ class CardWidget extends StatelessWidget {
                 )
               ],
             ),
-            Text(
-                model.cardName.toString(),
-                style: AppStyles.regularWhiteHeading18
+            SizedBox(
+              width: 200,
+              child: Image.memory(
+                model.photo!,
+                fit: BoxFit.cover,
+              ),
             ),
-            SizedBox(height: 0,)
+            const SizedBox(height: 0,)
           ],
         ),
       ),
