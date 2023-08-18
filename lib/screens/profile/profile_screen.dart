@@ -1,12 +1,11 @@
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
-import 'package:visiting_card/routes/routes.dart';
+import 'package:visiting_card/screens/home/home_controller.dart';
 import 'package:visiting_card/screens/profile/profile_controller.dart';
 import 'package:visiting_card/services/firebase_services.dart';
 
@@ -31,6 +30,7 @@ class ProfileScreen extends GetView<ProfileController> {
             IconButton(onPressed: () => FirebaseServices().signOut().whenComplete(() {
               controller.isBuyer.value = false;
               controller.deleteUser(controller.user.value);
+              HomeController.to.cardList.clear();
             }), icon: Icon(Icons.exit_to_app))
           ],
         ),
@@ -62,7 +62,11 @@ class ProfileScreen extends GetView<ProfileController> {
                       : SignInButton(
                           Buttons.Google,
                           text: "Sign up with Google",
-                          onPressed: () => controller.signInWithGoogle(),
+                          onPressed: () => controller.signInWithGoogle().then((value) {
+                            if(value){
+                              Get.back();
+                            }
+                          }),
                         ),
                   SizedBox(
                     height: 50,

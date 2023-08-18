@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:visiting_card/helpers/session.dart';
 import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
 import 'package:visiting_card/screens/add_club_card_manually/add_club_card_controller.dart';

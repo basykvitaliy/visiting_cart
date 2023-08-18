@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:visiting_card/helpers/constants.dart';
-import 'package:visiting_card/model/my_card/address_model.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/model/user/user_model.dart';
 
@@ -59,7 +57,7 @@ class SqlDbRepository {
     );
 
     await db.execute("CREATE TABLE $myCardTable("
-        "$colCardId INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "$colCardId TEXT PRIMARY KEY, "
         "$colCardName TEXT, "
         "$colBarcode TEXT, "
         "$colDate TEXT, "
@@ -160,6 +158,10 @@ class SqlDbRepository {
   Future<void> deleteAllUser() async {
     Database db = await this.db;
     await db.delete(userTable);
+  }
+  Future<void> deleteAllCards() async {
+    Database db = await this.db;
+    await db.delete(myCardTable);
   }
 
   /// Search

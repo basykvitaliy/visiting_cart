@@ -6,11 +6,13 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/helpers/utils.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
+import 'package:visiting_card/model/my_card/card_fb_model.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/services/firebase_services.dart';
 
@@ -67,12 +69,24 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
   }
 
   Future<AuthStatus> saveNewPersonCard()async{
+    var uuid = const Uuid();
     var card = CardModel();
+    var cardFb = CardFBModel();
+    card.id = uuid.v1();
     card.cardName = cardNameController.text;
     card.barcode = barcodeController.text;
     card.photo = await FirebaseServices().downloadAndSaveImage(logo.value);
     card.date = getDateTimeNow();
     card.backgroundColor = backgroundColor.value;
+
+    cardFb.id = card.id;
+    cardFb.cardName = card.cardName;
+    cardFb.barcode = card.barcode;
+    cardFb.photo = logo.value;
+    cardFb.date = card.date;
+    cardFb.backgroundColor = card.backgroundColor;
+
+    await FirebaseServices().writeCardToFirebase(cardFb);
     return await SqlDbRepository.instance.insertCard(card);
   }
 

@@ -97,6 +97,7 @@ class HomeScreen extends GetView<HomeController> {
                           return GestureDetector(
                             onLongPress: () {
                               controller.deleteCard(controller.cardList[index].id.toString());
+                              controller.cardList.clear();
                               controller.getCardList();
                               Get.showSnackbar(GetSnackBar(
                                 titleText: Text("success".tr, style: AppStyles.regularWhiteText16),

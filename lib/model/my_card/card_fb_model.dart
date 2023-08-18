@@ -1,14 +1,14 @@
 import 'dart:typed_data';
 
-class CardModel {
+class CardFBModel {
   String? id;
   String? cardName;
   String? barcode;
   String? date;
   String? backgroundColor;
-  Uint8List? photo;
+  String? photo;
 
-  CardModel({
+  CardFBModel({
     this.id,
     this.cardName,
     this.barcode,
@@ -28,7 +28,7 @@ class CardModel {
     return map;
   }
 
-  CardModel.fromJson(Map<String, dynamic> json) {
+  CardFBModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     cardName = json['cardName'];
     barcode = json['barcode'];

@@ -55,16 +55,17 @@ class ProfileController extends BaseController{
 
   Future<void> deleteUser(UserModel userModel)async{
     await SqlDbRepository.instance.deleteUser(userModel);
+    await SqlDbRepository.instance.deleteAllCards();
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       await FirebaseServices().signInWithGoogle().then((value) async {
         googleUser = value;
         isBuyer.value = value!.email.isNotEmpty ? true : false;
       });
 
-      if (isBuyer != true) {
+      if (isBuyer.isFalse) {
         Get.showSnackbar(GetSnackBar(
           titleText: Text("thereIsNoSuchUser".tr, style: AppTheme().styles!.hintStyle16,),
           messageText: Text("youNeedToRegister".tr, style: AppTheme().styles!.hintStyle14,),
@@ -86,8 +87,9 @@ class ProfileController extends BaseController{
               photo: googleUser?.photoUrl,
               email: googleUser?.email
           );
-          await saveUser(u).whenComplete(() => getUser());
+          await saveUser(u);
           if (v.user != null) {
+            await getUser();
             User? user = FirebaseAuth.instance.currentUser;
             var token = await user!.getIdToken();
             Session.authToken = token;
@@ -111,6 +113,7 @@ class ProfileController extends BaseController{
           print("Unknown error.");
       }
     }
+    return isBuyer.value;
   }
 
   @override

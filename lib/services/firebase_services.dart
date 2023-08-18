@@ -8,6 +8,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
+import 'package:visiting_card/model/my_card/card_fb_model.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 
 class FirebaseServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,8 +17,32 @@ class FirebaseServices {
   static RxString notificationId = "".obs;
 
   CollectionReference collectionLogos = FirebaseFirestore.instance.collection("logos");
+  CollectionReference collectionUsers = FirebaseFirestore.instance.collection("users");
 
   String getUserId() => _auth.currentUser!.uid;
+
+  /// Create a new client to firebase cloudstore.
+  Future<AuthStatus> writeCardToFirebase(CardFBModel cardModel) async {
+    try {
+      await collectionUsers.doc(getUserId()).collection("cards").doc(cardModel.id.toString()).set(cardModel.toJson()).whenComplete(() => _status = AuthStatus.successful);
+    } on FirebaseAuthException catch (e, stack) {
+      _status = AuthStatus.firebaseError;
+      print(e.message.toString());
+      return _status;
+    } catch (e) {
+      _status = AuthStatus.error;
+      print(e.toString());
+      return _status;
+    }
+    return _status;
+  }
+
+  Future<AuthStatus> removeCard(String docId) async {
+    await collectionUsers.doc(getUserId()).collection("cards").doc(docId).delete().whenComplete(() {
+      _status = AuthStatus.successful;
+    }).catchError((e) => _status = AuthExceptionHandler.handleAuthException(e));
+    return _status;
+  }
 
   /// Sign in with google.
   Future<GoogleSignInAccount?> signInWithGoogle() async {
@@ -53,18 +79,18 @@ class FirebaseServices {
 
   /// Get managers from firebase firestore.
   Future<List<LogosModel>> getLogos() async {
-    List<LogosModel> listManagers = List<LogosModel>.empty(growable: true);
+    List<LogosModel> listLogos = List<LogosModel>.empty(growable: true);
     try {
       QuerySnapshot snapshot = await collectionLogos.get();
       for (var logo in snapshot.docs) {
-        listManagers.add(LogosModel.fromJson(logo.data() as Map<String, dynamic>));
+        listLogos.add(LogosModel.fromJson(logo.data() as Map<String, dynamic>));
       }
     } on FirebaseException catch (e, s) {
       print("ERROR FIREBASE CATCH: $e");
     } catch (e) {
       print("ERROR CATCH: $e");
     }
-    return listManagers;
+    return listLogos;
   }
 
   static String readTimestamp(int timestamp) {
@@ -104,6 +130,7 @@ class FirebaseServices {
         .then((_) => print('Updated'))
         .catchError((error) => print('Update failed: $error'));
   }
+
 
 
   Future<Uint8List> downloadAndSaveImage(String imageUrl) async {

@@ -5,6 +5,7 @@ import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/base_controller.dart';
+import 'package:visiting_card/services/firebase_services.dart';
 
 class HomeController extends BaseController {
   static HomeController get to => Get.find();
@@ -23,6 +24,7 @@ class HomeController extends BaseController {
   }
 
   Future<bool> deleteCard(String id)async{
+    await FirebaseServices().removeCard(id);
     return await SqlDbRepository.instance.deleteCard(id);
   }
 
