@@ -39,13 +39,13 @@ class CardWidget extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            model.photo != null ? SizedBox(
               width: 200,
               child: Image.memory(
                 model.photo!,
                 fit: BoxFit.cover,
               ),
-            ),
+            ) : const SizedBox(height: 0,),
             const SizedBox(height: 0,)
           ],
         ),

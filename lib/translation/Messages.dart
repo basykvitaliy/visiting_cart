@@ -28,7 +28,7 @@ class Messages extends Translations {
           "profile": "Profile",
           "settings": "Settings",
           "pay": "Pay",
-          "myCards": "My cards",
+          "cards": "Cards",
           "favorite": "Favorite",
           "personal": "Personal",
           "clubCard": "Club card",
