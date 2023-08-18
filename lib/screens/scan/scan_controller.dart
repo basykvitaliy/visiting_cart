@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
+import 'package:visiting_card/screens/add_club_card_manually/add_club_card_controller.dart';
 
 class ScanController extends GetxController {
   static ScanController get to => Get.find();
@@ -23,7 +24,7 @@ class ScanController extends GetxController {
     var scanArea = (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400) ? 250.0 : 350.0;
     return QRView(
       key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
+      onQRViewCreated: onQRViewCreated,
       overlay: QrScannerOverlayShape(
         borderColor: AppColors.secondColor,
         borderRadius: 10,
@@ -32,24 +33,26 @@ class ScanController extends GetxController {
         cutOutHeight: 250,
         cutOutWidth: MediaQuery.of(context).size.width / 1.3,
       ),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+      onPermissionSet: (ctrl, p) => onPermissionSet(context, ctrl, p),
     );
   }
 
-  void _onQRViewCreated(QRViewController qController) {
+  void onQRViewCreated(QRViewController qController) {
     controllerQr = qController;
     controllerQr.resumeCamera();
     qController.scannedDataStream.listen((scanData) {
       if(scanData.code!.isNotEmpty){
         barcodeResult = scanData;
         barcodeMainValue.value = barcodeResult!.code!;
+        AddClubCardController.to.barcodeController.text = barcodeMainValue.value;
         print(barcodeMainValue.value);
-        Get.back(result: barcodeMainValue.value);
+        controllerQr.stopCamera();
+        Get.back();
       }
     });
   }
 
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+  void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),
