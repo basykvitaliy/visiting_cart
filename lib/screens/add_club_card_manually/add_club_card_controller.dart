@@ -94,7 +94,7 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
   void _createInterstitialAd() {
     InterstitialAd.load(
         adUnitId: Platform.isAndroid
-            ? 'ca-app-pub-3940256099942544/1033173712'
+            ? 'ca-app-pub-8171967781718919/2256605705'
             : 'ca-app-pub-3940256099942544/4411468910',
         request: request,
         adLoadCallback: InterstitialAdLoadCallback(

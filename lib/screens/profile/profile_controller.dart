@@ -133,9 +133,8 @@ class ProfileController extends BaseController{
   }
 
   Future<AuthStatus> saveNewPersonCard(CardFBModel model)async{
-    var uuid = const Uuid();
     var card = CardModel();
-    card.id = uuid.v1();
+    card.id = model.id;
     card.cardName = model.cardName;
     card.barcode = model.barcode;
     card.photo = await FirebaseServices().downloadAndSaveImage(model.photo.toString());

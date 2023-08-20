@@ -53,7 +53,8 @@ class FirebaseServices {
   }
 
   Future<AuthStatus> removeCard(String docId) async {
-    await collectionUsers.doc(getUserId()).collection("cards").doc(docId).delete().whenComplete(() {
+    var uid = getUserId();
+    await collectionUsers.doc(uid).collection("cards").doc(docId).delete().whenComplete(() {
       _status = AuthStatus.successful;
     }).catchError((e) => _status = AuthExceptionHandler.handleAuthException(e));
     return _status;
