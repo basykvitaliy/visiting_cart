@@ -31,6 +31,7 @@ class ProfileScreen extends GetView<ProfileController> {
               controller.isBuyer.value = false;
               controller.deleteUser(controller.user.value);
               HomeController.to.cardList.clear();
+              Get.forceAppUpdate();
             }), icon: Icon(Icons.exit_to_app))
           ],
         ),
@@ -62,11 +63,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       : SignInButton(
                           Buttons.Google,
                           text: "Sign up with Google",
-                          onPressed: () => controller.signInWithGoogle().then((value) {
-                            if(value){
-                              Get.back();
-                            }
-                          }),
+                          onPressed: () => controller.signInWithGoogle(),
                         ),
                   SizedBox(
                     height: 50,

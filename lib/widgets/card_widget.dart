@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
@@ -26,29 +25,14 @@ class CardWidget extends StatelessWidget {
         width: MediaQuery.of(context).size.width,
         height: 150,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  model.date.toString(),
-                  style: AppStyles.regularText,
-                  textAlign: TextAlign.center,
-                )
-              ],
-            ),
-            model.photo != null ? SizedBox(
-              width: 200,
-              child: Image.memory(
-                model.photo!,
-                fit: BoxFit.cover,
+        child: model.photo != null
+            ? Image.memory(
+              model.photo!,
+              scale: 2,
+            )
+            : const SizedBox(
+                height: 0,
               ),
-            ) : const SizedBox(height: 0,),
-            const SizedBox(height: 0,)
-          ],
-        ),
       ),
     );
   }

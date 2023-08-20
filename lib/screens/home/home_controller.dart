@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
+import 'package:visiting_card/model/my_card/card_fb_model.dart';
 import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/screens/base_controller.dart';
 import 'package:visiting_card/services/firebase_services.dart';
@@ -15,11 +16,26 @@ class HomeController extends BaseController {
   RxBool isFavorite = false.obs;
   void toggleFavorite() => isFavorite.toggle();
   RxList<CardModel> cardList = RxList<CardModel>();
+  RxList<CardFBModel> cardFBList = RxList<CardFBModel>();
 
   BannerAd? bannerAd;
 
   Future<List<CardModel>> getCardList()async{
     cardList.value = await SqlDbRepository.instance.getUserCards();
+    if(cardList.isEmpty){
+      cardFBList.value = await FirebaseServices().getCards();
+      cardFBList.forEach((element) async{
+        cardList.add(CardModel(
+          id: element.id,
+          cardName: element.cardName,
+          barcode: element.barcode,
+          backgroundColor: element.backgroundColor,
+          photo: await FirebaseServices().downloadAndSaveImage(element.photo.toString()),
+          date: element.date
+        ));
+      });
+
+    }
     return cardList;
   }
 
@@ -44,6 +60,7 @@ class HomeController extends BaseController {
         },
       ),
     ).load();
+    await getCardList();
     await getUser();
     super.onInit();
   }

@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +22,6 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getCardList();
     return Scaffold(
       backgroundColor: AppTheme().colors!.mainBackground,
       floatingActionButton: FloatingActionButton(
@@ -31,7 +31,7 @@ class HomeScreen extends GetView<HomeController> {
       ),
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: Lottie.asset("assets/anim/animation_bg.json", repeat: true, frameRate: FrameRate.max, fit: BoxFit.cover),
@@ -83,10 +83,15 @@ class HomeScreen extends GetView<HomeController> {
                               margin: const EdgeInsets.only(right: 8),
                               child: Obx(
                                 () => controller.isBuyer.value
-                                    ? Image.network(
-                                        controller.user.value.photo.toString(),
-                                        scale: 3,
-                                      )
+                                    ? CircularProfileAvatar(
+                                  '',
+                                  radius: 18,
+                                  borderWidth: 0,
+                                  borderColor: Colors.transparent,
+                                  child: Image.network(
+                                    controller.user.value.photo.toString(),
+                                  ),
+                                )
                                     : const Icon(Icons.person, color: AppColors.whiteColor),
                               ),
                             ))
@@ -95,10 +100,12 @@ class HomeScreen extends GetView<HomeController> {
                     Obx(() => SliverList(
                             delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                           return GestureDetector(
-                            onLongPress: () {
-                              controller.deleteCard(controller.cardList[index].id.toString());
-                              controller.cardList.clear();
-                              controller.getCardList();
+                            onLongPress: () async{
+                              await controller.deleteCard(controller.cardList[index].id.toString()).then((value) async{
+                                controller.cardList.clear();
+                                await controller.getCardList();
+                              });
+
                               Get.showSnackbar(GetSnackBar(
                                 titleText: Text("success".tr, style: AppStyles.regularWhiteText16),
                                 messageText: Text("youCardIsDelete".tr, style: AppStyles.regularWhiteText16),

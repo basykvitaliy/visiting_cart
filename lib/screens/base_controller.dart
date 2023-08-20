@@ -7,8 +7,9 @@ class BaseController extends GetxController{
   RxBool isBuyer = false.obs;
   Rx<UserModel> user = UserModel().obs;
 
-  Future<void> getUser()async{
+  Future<bool> getUser()async{
     user.value = (await SqlDbRepository.instance.getUser())!;
     if(user.value.name!.isNotEmpty) isBuyer.value = true;
+    return isBuyer.value;
   }
 }

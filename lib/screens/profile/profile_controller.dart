@@ -12,13 +12,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:synchronized/synchronized.dart';
+import 'package:uuid/uuid.dart';
 import 'package:visiting_card/ad/ad_mob.dart';
 import 'package:visiting_card/data/sql_db/SqlDbRepository.dart';
 import 'package:visiting_card/helpers/app_colors.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/helpers/session.dart';
+import 'package:visiting_card/helpers/utils.dart';
+import 'package:visiting_card/model/my_card/card_fb_model.dart';
+import 'package:visiting_card/model/my_card/card_model.dart';
 import 'package:visiting_card/model/user/user_model.dart';
 import 'package:visiting_card/screens/base_controller.dart';
+import 'package:visiting_card/screens/home/home_controller.dart';
 import 'package:visiting_card/services/firebase_services.dart';
 import 'package:visiting_card/widgets/picker_photo_dialog.dart';
 
@@ -27,7 +33,7 @@ class ProfileController extends BaseController{
 
   BannerAd? bannerAd;
   late final GoogleSignInAccount? googleUser;
-
+  final _lock = Lock();
 
   @override
   void onInit()async {
@@ -89,10 +95,20 @@ class ProfileController extends BaseController{
           );
           await saveUser(u);
           if (v.user != null) {
-            await getUser();
             User? user = FirebaseAuth.instance.currentUser;
             var token = await user!.getIdToken();
             Session.authToken = token;
+            await _lock.synchronized(() async {
+              await FirebaseServices().getCards().then((value) async{
+                value.forEach((element)async {
+                  await saveNewPersonCard(element);
+                });
+              });
+              await HomeController.to.getUser();
+              await HomeController.to.getCardList();
+              Get.back();
+            });
+
           }
         });
       }
@@ -114,6 +130,18 @@ class ProfileController extends BaseController{
       }
     }
     return isBuyer.value;
+  }
+
+  Future<AuthStatus> saveNewPersonCard(CardFBModel model)async{
+    var uuid = const Uuid();
+    var card = CardModel();
+    card.id = uuid.v1();
+    card.cardName = model.cardName;
+    card.barcode = model.barcode;
+    card.photo = await FirebaseServices().downloadAndSaveImage(model.photo.toString());
+    card.date = getDateTimeNow();
+    card.backgroundColor = model.backgroundColor;
+    return await SqlDbRepository.instance.insertCard(card);
   }
 
   @override

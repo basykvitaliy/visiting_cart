@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:visiting_card/helpers/constants.dart';
 import 'package:visiting_card/model/logos/logos_model.dart';
 import 'package:visiting_card/model/my_card/card_fb_model.dart';
-import 'package:visiting_card/model/my_card/card_model.dart';
 
 class FirebaseServices {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -35,6 +34,22 @@ class FirebaseServices {
       return _status;
     }
     return _status;
+  }
+
+
+  Future<List<CardFBModel>> getCards() async {
+    List<CardFBModel> listCards = List<CardFBModel>.empty(growable: true);
+    try {
+      QuerySnapshot snapshot = await collectionUsers.doc(getUserId()).collection("cards").get();
+      for (var card in snapshot.docs) {
+        listCards.add(CardFBModel.fromJson(card.data() as Map<String, dynamic>));
+      }
+    } on FirebaseException catch (e, s) {
+      print("ERROR FIREBASE CATCH: $e");
+    } catch (e) {
+      print("ERROR CATCH: $e");
+    }
+    return listCards;
   }
 
   Future<AuthStatus> removeCard(String docId) async {
@@ -130,8 +145,6 @@ class FirebaseServices {
         .then((_) => print('Updated'))
         .catchError((error) => print('Update failed: $error'));
   }
-
-
 
   Future<Uint8List> downloadAndSaveImage(String imageUrl) async {
     final d.Dio dio = d.Dio();
