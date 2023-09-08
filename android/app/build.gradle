@@ -61,6 +61,12 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            def date = new Date().format("dd.MM.yyyy-HH.mm")
+            outputFileName = rootProject.getName() + "-" + defaultConfig.versionName + "-${variant.name}-${date}.apk"
+        }
+    }
 }
 
 flutter {
