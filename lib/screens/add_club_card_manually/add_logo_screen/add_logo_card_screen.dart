@@ -42,6 +42,7 @@ class AddLogoCardScreen extends GetView<AddClubCardController> {
                       controller.backgroundColor.value = logosList[index].backgroundColor.toString();
                       controller.logo.value = logosList[index].image.toString();
                       controller.isLoadImage.value = true;
+                      controller.isPhotoOrUrl.value = false;
                       Get.back();
                     },
                     child: Container(

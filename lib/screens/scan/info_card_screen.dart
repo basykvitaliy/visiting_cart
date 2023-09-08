@@ -18,7 +18,7 @@ class InfoCardScreen extends GetView<ScanController> {
         appBar: AppBar(
           title: Text(cardModel.cardName.toString()),
           centerTitle: true,
-          backgroundColor: convertHexToColor(cardModel.backgroundColor.toString()),
+          backgroundColor: cardModel.backgroundColor != "" ? convertHexToColor(cardModel.backgroundColor.toString()) : AppColors.mainColor,
           automaticallyImplyLeading: true,
         ),
         backgroundColor: AppColors.mainColor,

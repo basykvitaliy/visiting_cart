@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart' as d;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
@@ -36,7 +38,23 @@ class FirebaseServices {
     return _status;
   }
 
-
+  Future<String> uploadImageToFirebaseStorage(String imagePath) async {
+    var result;
+    final storage = FirebaseStorage.instance;
+    final File imageFile = File(imagePath);
+    final String fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
+    final Reference reference = storage.ref().child(getUserId()).child(fileName);
+    try {
+      final UploadTask uploadTask = reference.putFile(imageFile);
+      await uploadTask.whenComplete(() async {
+        final String photoUrl = await reference.getDownloadURL();
+        result = photoUrl;
+      });
+    } catch (e) {
+      print("Error uploading file: $e");
+    }
+    return result;
+  }
   Future<List<CardFBModel>> getCards() async {
     List<CardFBModel> listCards = List<CardFBModel>.empty(growable: true);
     try {

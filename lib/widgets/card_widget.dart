@@ -16,7 +16,7 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      color: convertHexToColor(model.backgroundColor.toString()),
+      color: model.backgroundColor != "" ? convertHexToColor(model.backgroundColor.toString()) : Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(7),
       ),
@@ -27,9 +27,9 @@ class CardWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         child: model.photo != null
             ? Image.memory(
-              model.photo!,
-              scale: 2,
-            )
+                model.photo!,
+                scale: 2,
+              )
             : const SizedBox(
                 height: 0,
               ),

@@ -69,7 +69,6 @@ class HomeScreen extends GetView<HomeController> {
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.whiteColor),
                             ),
-
                           ],
                         ),
                         expandedTitleScale: 2,
@@ -84,14 +83,14 @@ class HomeScreen extends GetView<HomeController> {
                               child: Obx(
                                 () => controller.isBuyer.value
                                     ? CircularProfileAvatar(
-                                  '',
-                                  radius: 18,
-                                  borderWidth: 0,
-                                  borderColor: Colors.transparent,
-                                  child: Image.network(
-                                    controller.user.value.photo.toString(),
-                                  ),
-                                )
+                                        '',
+                                        radius: 18,
+                                        borderWidth: 0,
+                                        borderColor: Colors.transparent,
+                                        child: Image.network(
+                                          controller.user.value.photo.toString(),
+                                        ),
+                                      )
                                     : const Icon(Icons.person, color: AppColors.whiteColor),
                               ),
                             ))
@@ -100,8 +99,8 @@ class HomeScreen extends GetView<HomeController> {
                     Obx(() => SliverList(
                             delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                           return GestureDetector(
-                            onLongPress: () async{
-                              await controller.deleteCard(controller.cardList[index].id.toString()).then((value) async{
+                            onLongPress: () async {
+                              await controller.deleteCard(controller.cardList[index].id.toString()).then((value) async {
                                 controller.cardList.clear();
                                 await controller.getCardList();
                               });
@@ -142,7 +141,7 @@ class HomeScreen extends GetView<HomeController> {
               controller.bannerAd != null
                   ? Align(
                       alignment: Alignment.center,
-                      child: Container(
+                      child: SizedBox(
                         width: controller.bannerAd!.size.width.toDouble(),
                         height: controller.bannerAd!.size.height.toDouble(),
                         child: AdWidget(ad: controller.bannerAd!),
