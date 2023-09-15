@@ -67,7 +67,6 @@ dependencies:
   sqflite: ^2.2.8+1
   qr_flutter: ^4.0.0
   syncfusion_flutter_barcodes: ^22.2.7
-  flutter_typeahead: ^4.3.2
   animations: ^2.0.0
   google_mobile_ads: ^3.0.0
   google_sign_in: ^5.4.1
