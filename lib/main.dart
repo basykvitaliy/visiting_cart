@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:visiting_card/routes/app_pages.dart';
 import 'package:visiting_card/screens/home/home_screen.dart';
 import 'package:visiting_card/translation/Messages.dart';
-
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'helpers/app_colors.dart';
 import 'helpers/constants.dart';
 
@@ -18,6 +18,8 @@ void main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   //await checkPermissions();
+
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   /// Permission for visible image network.
   final context = SecurityContext.defaultContext;
