@@ -90,7 +90,8 @@ class AddClubCardController extends GetxController with GetTickerProviderStateMi
     cardFb.barcode = card.barcode;
     cardFb.date = card.date;
     cardFb.backgroundColor = card.backgroundColor;
-  if(imageAvatarUrl != ""){
+
+  if(imageAvatarUrl != "" && await FirebaseServices().getUserId() != ""){
     await FirebaseServices().uploadImageToFirebaseStorage(imageAvatarUrl!).then((value) async {
       if (value.isNotEmpty) {
         cardFb.photo = value;

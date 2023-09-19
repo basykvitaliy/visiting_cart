@@ -61,7 +61,7 @@ class HomeController extends BaseController {
       ),
     ).load();
     await getCardList();
-    await getUser();
+    //await getUser();
     super.onInit();
   }
 

@@ -97,6 +97,8 @@ class ProfileController extends BaseController{
           if (v.user != null) {
             User? user = FirebaseAuth.instance.currentUser;
             var token = await user!.getIdToken();
+            SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+            sharedPreferences.setString(Keys.uId, user.uid);
             Session.authToken = token;
             await _lock.synchronized(() async {
               await FirebaseServices().getCards().then((value) async{

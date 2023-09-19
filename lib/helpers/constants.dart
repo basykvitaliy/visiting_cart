@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 enum BottomNavTabs {
   main,
   notification,
@@ -40,6 +42,7 @@ class Keys {
   static const isDarkTheme = "isDarkTheme";
   static const deviceId = "deviceId";
   static const token = "token";
+  static const uId = "uId";
   static const color = "color";
   static const cardKey = "cardKey";
   static const barcodeSvg = "barcodeSvg";

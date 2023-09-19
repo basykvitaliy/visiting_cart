@@ -32,7 +32,7 @@ class ProfileScreen extends GetView<ProfileController> {
               controller.deleteUser(controller.user.value);
               HomeController.to.cardList.clear();
               Get.forceAppUpdate();
-            }), icon: Icon(Icons.exit_to_app))
+            }), icon: const Icon(Icons.exit_to_app))
           ],
         ),
         backgroundColor: AppTheme().colors!.mainBackground,
@@ -55,22 +55,28 @@ class ProfileScreen extends GetView<ProfileController> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Text(controller.user.value.name.toString(), style: AppStyles.regularWhiteHeading18,),
+                          Text(controller.user.value.name.toString(), style: AppStyles.regularWhiteHeading18),
                           const SizedBox(height: 16),
-                          Text(controller.user.value.email.toString(), style: AppStyles.regularWhiteHeading18,)
+                          Text(controller.user.value.email.toString(), style: AppStyles.regularWhiteHeading18)
                         ],
                       )
-                      : SignInButton(
-                          Buttons.Google,
-                          text: "Sign up with Google",
-                          onPressed: () => controller.signInWithGoogle(),
-                        ),
+                      : Column(
+                        children: [
+                          Text("inOrderToBeAbleToRestoreYourDataYouNeedToRegister".tr, style: AppStyles.regularWhiteText16, textAlign: TextAlign.center,),
+                          const SizedBox(height: 32),
+                          SignInButton(
+                              Buttons.Google,
+                              text: "Sign up with Google",
+                              onPressed: () => controller.signInWithGoogle(),
+                            ),
+                        ],
+                      ),
                   SizedBox(
                     height: 50,
                     child: controller.bannerAd != null
                         ? Align(
                             alignment: Alignment.center,
-                            child: Container(
+                            child: SizedBox(
                               width: controller.bannerAd!.size.width.toDouble(),
                               height: controller.bannerAd!.size.height.toDouble(),
                               child: AdWidget(ad: controller.bannerAd!),
