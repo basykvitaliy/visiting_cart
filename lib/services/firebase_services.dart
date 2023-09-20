@@ -21,24 +21,23 @@ class FirebaseServices {
   CollectionReference collectionLogos = FirebaseFirestore.instance.collection("logos");
   CollectionReference collectionUsers = FirebaseFirestore.instance.collection("users");
 
-  Future<String> getUserId()async {
+  String getUserId(){
     if (_auth.currentUser != null) {
       return _auth.currentUser!.uid;
     } else {
-     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-     if(sharedPreferences.containsKey(Keys.uId)){
-       return sharedPreferences.getString(Keys.uId)!;
-     }else{
-       return "";
-     }
+      return "";
     }
   }
 
   /// Create a new client to firebase cloudstore.
   Future<AuthStatus> writeCardToFirebase(CardFBModel cardModel) async {
-    var token = getUserId();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var uId = getUserId();
+    if(uId == "" && sharedPreferences.containsKey(Keys.uId)){
+      uId = sharedPreferences.getString(Keys.uId)!;
+    }
     try {
-      await collectionUsers.doc(token.toString()).collection("cards").doc(cardModel.id.toString()).set(cardModel.toJson()).whenComplete(() => _status = AuthStatus.successful);
+      await collectionUsers.doc(uId).collection("cards").doc(cardModel.id.toString()).set(cardModel.toJson()).whenComplete(() => _status = AuthStatus.successful);
     } on FirebaseAuthException catch (e, stack) {
       _status = AuthStatus.firebaseError;
       print(e.message.toString());
@@ -53,11 +52,15 @@ class FirebaseServices {
 
   Future<String> uploadImageToFirebaseStorage(String imagePath) async {
     var result;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var uId = getUserId();
+    if(uId == "" && sharedPreferences.containsKey(Keys.uId)){
+      uId = sharedPreferences.getString(Keys.uId)!;
+    }
     final storage = FirebaseStorage.instance;
     final File imageFile = File(imagePath);
     final String fileName = "${DateTime.now().millisecondsSinceEpoch}.jpg";
-    final Reference reference = storage.ref().child(uId.toString()).child(fileName);
+    final Reference reference = storage.ref().child(uId).child(fileName);
     try {
       final UploadTask uploadTask = reference.putFile(imageFile);
       await uploadTask.whenComplete(() async {
@@ -71,9 +74,13 @@ class FirebaseServices {
   }
   Future<List<CardFBModel>> getCards() async {
     List<CardFBModel> listCards = List<CardFBModel>.empty(growable: true);
-    var token = getUserId();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var uId = getUserId();
+    if(uId == "" && sharedPreferences.containsKey(Keys.uId)){
+      uId = sharedPreferences.getString(Keys.uId)!;
+    }
     try {
-      QuerySnapshot snapshot = await collectionUsers.doc(token.toString()).collection("cards").get();
+      QuerySnapshot snapshot = await collectionUsers.doc(uId).collection("cards").get();
       for (var card in snapshot.docs) {
         listCards.add(CardFBModel.fromJson(card.data() as Map<String, dynamic>));
       }
@@ -86,8 +93,12 @@ class FirebaseServices {
   }
 
   Future<AuthStatus> removeCard(String docId) async {
-    var uid = getUserId();
-    await collectionUsers.doc(uid.toString()).collection("cards").doc(docId).delete().whenComplete(() {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var uId = getUserId();
+    if(uId == "" && sharedPreferences.containsKey(Keys.uId)){
+      uId = sharedPreferences.getString(Keys.uId)!;
+    }
+    await collectionUsers.doc(uId).collection("cards").doc(docId).delete().whenComplete(() {
       _status = AuthStatus.successful;
     }).catchError((e) => _status = AuthExceptionHandler.handleAuthException(e));
     return _status;
@@ -173,9 +184,13 @@ class FirebaseServices {
 
   /// Update field last_activity from collection manager.
   Future<void> updateManager(String time) async {
-    var token = getUserId();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    var uId = getUserId();
+    if(uId == "" && sharedPreferences.containsKey(Keys.uId)){
+      uId = sharedPreferences.getString(Keys.uId)!;
+    }
     await collectionLogos
-        .doc(token.toString())
+        .doc(uId)
         .update({'last_activity': time})
         .then((_) => print('Updated'))
         .catchError((error) => print('Update failed: $error'));
